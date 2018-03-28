@@ -88,6 +88,7 @@ class WeatherNotification(val context: Context) {
 
 
 //            val title = city
+
             val message = "$temp°C     $description"
 
 
