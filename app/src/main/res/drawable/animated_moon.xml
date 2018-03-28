@@ -1,0 +1,10 @@
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/sprite_moon0" android:duration="200" />
+    <item android:drawable="@drawable/sprite_moon1" android:duration="200" />
+    <item android:drawable="@drawable/sprite_moon2" android:duration="200" />
+    <item android:drawable="@drawable/sprite_moon3" android:duration="200" />
+    <item android:drawable="@drawable/sprite_moon4" android:duration="200" />
+    <item android:drawable="@drawable/sprite_moon5" android:duration="200" />
+</animation-list>

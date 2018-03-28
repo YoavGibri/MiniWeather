@@ -1,0 +1,19 @@
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/sprite_cloudy00" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy01" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy02" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy03" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy04" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy05" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy06" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy07" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy08" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy09" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy10" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy11" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy12" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy13" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy14" android:duration="200" />
+</animation-list>

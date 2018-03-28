@@ -1,0 +1,18 @@
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/sprite_walking_man00" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man01" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man02" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man03" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man04" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man05" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man06" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man07" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man08" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man09" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man10" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man11" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man12" android:duration="200" />
+    <item android:drawable="@drawable/sprite_walking_man13" android:duration="200" />
+</animation-list>

@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Mini Weather</string>
+    <string name="notification_title">Title</string>
+    <string name="notification_text">Some text</string>
+    <string name="notification_ticker" />
+    <string name="stop">Stop</string>
+    <string name="play">Play</string>
+    <string name="unknown_location">Unknown Location</string>
+    <string name="register_to_weather_updates">Register to Weather Updates</string>
+    <string name="main_activity_explanation">Weather StatusBar Animations will show you a StatusBar animated icon of the current weather state, based on your location.\nThe current temperature will be shown in the Notification.\nThank you for installing this app. Have fun!</string>
+    <string name="key_register_for_updates">register_for_updates</string>
+    <string name="un_Reg_locations">UnReg Locations</string>
+    <string name="Reg_locations">Reg Locations</string>
+    <string name="sp_key_units_format">unitsFormat</string>
+
+    <plurals name="num_locations_reported">
+        <item quantity="zero">No location reported</item>
+        <item quantity="one">One location reported</item>
+        <item quantity="other">%d locations reported</item>
+    </plurals>
+
+</resources>

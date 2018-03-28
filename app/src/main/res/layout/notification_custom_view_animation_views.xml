@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="@layout/notification_custom_view">
+
+    <ProgressBar
+        android:id="@+id/animationSun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:indeterminateDrawable="@drawable/animated_sun"
+        android:layout_marginEnd="26dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/animationMoon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:indeterminateDrawable="@drawable/animated_moon"
+        android:layout_marginEnd="26dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/animationCloudy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:indeterminateDrawable="@drawable/animated_cloudy"
+        android:layout_marginEnd="26dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/animationCloudyNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:indeterminateDrawable="@drawable/animated_cloudy_night"
+        android:layout_marginEnd="26dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/animationClouds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:indeterminateDrawable="@drawable/animated_clouds"
+        android:layout_marginEnd="26dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/animationRain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:indeterminateDrawable="@drawable/animated_rain"
+        android:layout_marginEnd="26dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/animationLightning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:indeterminateDrawable="@drawable/animated_lightning"
+        android:layout_marginEnd="26dp"
+        android:visibility="gone" />
+
+
+</merge>

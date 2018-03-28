@@ -1,0 +1,8 @@
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/sprite_sun0" android:duration="200" />
+    <item android:drawable="@drawable/sprite_sun1" android:duration="200" />
+    <item android:drawable="@drawable/sprite_sun2" android:duration="200" />
+    <item android:drawable="@drawable/sprite_sun3" android:duration="200" />
+</animation-list>

@@ -1,0 +1,28 @@
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/sprite_cloudy_night00" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night01" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night02" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night03" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night04" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night05" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night06" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night07" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night08" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night09" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night10" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night11" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night11" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night10" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night09" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night08" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night07" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night06" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night05" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night04" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night03" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night02" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night01" android:duration="200" />
+    <item android:drawable="@drawable/sprite_cloudy_night00" android:duration="200" />
+   </animation-list>
