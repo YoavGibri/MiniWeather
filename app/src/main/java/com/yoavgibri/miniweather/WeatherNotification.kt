@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.preference.PreferenceManager
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.view.View
@@ -82,23 +83,17 @@ class WeatherNotification(val context: Context) {
         try {
             val iconName = weather.weather[0].icon
             val city = weather.name
-//            val country = weather.sys.country
             val temp = weather.main.temp.toFloat().toInt()
             val description = weather.weather[0].description
-
-
-//            val title = city
 
             val message = "$temp°C     $description"
 
 
             val iconRes = Do.getResIconByIconName(iconName)
             val animationViewId = Do.getProgressBarViewIdByIconName(iconName)
-//            val animationViewId = R.id.animationMoon
             if (iconRes == -1) throw Exception("LUBroadcastReceiver - onWeather - resIcon is -1")
 
 
-//            notificationLayout = RemoteViews(context.packageName, R.layout.notification_custom_view)
             Do.hideAllAnimations(notificationLayout)
             notificationLayout.setTextViewText(R.id.textViewCity, city)
 //            notificationLayout.setTextViewText(R.id.textViewCity, Calendar.getInstance().time.toString())
@@ -107,7 +102,7 @@ class WeatherNotification(val context: Context) {
             notificationLayout.setViewVisibility(animationViewId, 0)
             notificationLayout.setProgressBar(animationViewId, 2, 1, true)
 
-            val updateWeatherIntent :PendingIntent = PendingIntent.getBroadcast(context, 420, Intent(context, RefreshButtonReceiver::class.java), 0)
+            val updateWeatherIntent: PendingIntent = PendingIntent.getBroadcast(context, 420, Intent(context, RefreshButtonReceiver::class.java), 0)
             notificationLayout.setOnClickPendingIntent(R.id.buttonRefresh, updateWeatherIntent)
 
 
@@ -116,20 +111,8 @@ class WeatherNotification(val context: Context) {
                     .setCustomContentView(notificationLayout)
                     .build()
 
-            if (isMiui) try {
-                notification.color = context.getColor(R.color.white)
-                val miuiNotificationClass = Class.forName("android.app.MiuiNotification")
-                val miuiNotification = miuiNotificationClass.newInstance()
-                var field = miuiNotification.javaClass.getDeclaredField("customizedIcon")
-                field.isAccessible = true
-
-                field.set(miuiNotification, true)
-                field = notification::class.java.getField("extraNotification")
-                field.isAccessible = true
-
-                field.set(notification, miuiNotification)
-            } catch (e: Exception) {
-                isMiui = false
+            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_ismiui), true)) {
+                setMiuiCustomizationAllow(notification)
             }
 
 
@@ -137,6 +120,24 @@ class WeatherNotification(val context: Context) {
             Do.logToFile("WeatherNotification - updateWeather - " + message, context)
         } catch (e: Exception) {
             Do.logError(e.message, context)
+        }
+    }
+
+    private fun setMiuiCustomizationAllow(notification: Notification) {
+        try {
+            notification.color = context.getColor(R.color.white)
+            val miuiNotificationClass = Class.forName("android.app.MiuiNotification")
+            val miuiNotification = miuiNotificationClass.newInstance()
+            var field = miuiNotification.javaClass.getDeclaredField("customizedIcon")
+            field.isAccessible = true
+
+            field.set(miuiNotification, true)
+            field = notification::class.java.getField("extraNotification")
+            field.isAccessible = true
+
+            field.set(notification, miuiNotification)
+        } catch (e: Exception) {
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(context.getString(R.string.pref_ismiui), false).apply()
         }
     }
 
@@ -159,7 +160,7 @@ class WeatherNotification(val context: Context) {
         return notifications.any { it.id == STATUS_NOTIFICATION_ID }
     }
 
-    fun onRefreshClick(v: View){
+    fun onRefreshClick(v: View) {
 
     }
 

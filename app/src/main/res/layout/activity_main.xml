@@ -11,15 +11,35 @@
     tools:context="com.yoavgibri.miniweather.activities.MainActivity">
 
     <!--<android.support.v4.widget.Space-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1" />-->
 
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:src="@mipmap/ic_launcher"/>
+        >
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/web_hi_res_512"
+            android:padding="20dp"/>
+
+        <ImageButton
+            android:id="@+id/buttonSettings"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="end|top"
+            android:background="@color/transparent"
+            android:src="@drawable/settings_96px"
+            android:padding="16dp"
+            />
+
+    </FrameLayout>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"

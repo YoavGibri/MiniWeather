@@ -12,15 +12,20 @@ import com.yoavgibri.miniweather.*
 import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.Manifest.permission.*
+import android.app.Activity
 import android.os.Handler
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v7.app.AlertDialog
+import android.view.Menu
+import android.view.MenuItem
 import com.yoavgibri.miniweather.models.OpenWeather
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private val TAG = "MainActivity"
+    private val REQUEST_CODE_SETTINGS = 5432
+    lateinit var notificationManager :WeatherNotification
 
     private var permissionsOk: Boolean = false
 
@@ -30,23 +35,18 @@ class MainActivity : AppCompatActivity() {
         versionTextView.text = "Ver " + BuildConfig.VERSION_NAME
 
         //askForPermissions()
-        val notificationManager = WeatherNotification(this)
+        notificationManager = WeatherNotification(this)
 
+        buttonSettings.setOnClickListener {
+            startActivityForResult(Intent(this, SettingsActivity::class.java), REQUEST_CODE_SETTINGS)
+        }
         registerSwitch.setOnCheckedChangeListener({ buttonView, isChecked ->
             if (mFusedLocationClient != null) {
                 if (isChecked) {
                     if (checkSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
                         Do.setIsRegisteredForLocationUpdates(this, true)
 
-                        mFusedLocationClient?.lastLocation?.addOnSuccessListener {
-                            if (it != null) {
-                                WeatherManager(this).getCurrentWeatherJson(it.latitude, it.longitude, object : WeatherManager.OnWeatherLoad {
-                                    override fun onWeather(weather: OpenWeather) {
-                                        notificationManager.updateWeather(weather)
-                                    }
-                                })
-                            }
-                        }
+                        requestLastLocationAndUpdateWeather()
 
                         mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
 
@@ -79,11 +79,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestLastLocationAndUpdateWeather() {
+        if (checkSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
+            mFusedLocationClient?.lastLocation?.addOnSuccessListener {
+                if (it != null) {
+                    WeatherManager(this).getCurrentWeatherJson(it.latitude, it.longitude, object : WeatherManager.OnWeatherLoad {
+                        override fun onWeather(weather: OpenWeather) {
+                            notificationManager.updateWeather(weather)
+                        }
+                    })
+                }
+            }
+        }
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         Handler().postDelayed({ registerSwitch.isChecked = true }, 1000)
     }
-
 
 
     private fun getPendingIntent(): PendingIntent? {
@@ -122,6 +135,13 @@ class MainActivity : AppCompatActivity() {
             }
         }// other 'case' lines to check for other
         // permissions this app might request
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE_SETTINGS) {
+            requestLastLocationAndUpdateWeather()
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }
