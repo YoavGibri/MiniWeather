@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.OnCompleteListener
 import com.yoavgibri.miniweather.*
 import com.yoavgibri.miniweather.models.OpenWeather
 
@@ -30,31 +31,33 @@ class RefreshButtonReceiver : BroadcastReceiver() {
 
     companion object {
 
-        const val ACTION_PROCESS_UPDATES: String = BuildConfig.APPLICATION_ID + "action.PROCESS.UPDATES"
+//        const val ACTION_PROCESS_UPDATES: String = BuildConfig.APPLICATION_ID + "action.PROCESS.UPDATES"
 
         @SuppressLint("MissingPermission")
         fun doOnReceive(context: Context) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+
             fusedLocationClient?.lastLocation?.addOnSuccessListener {
                 if (it != null) {
-                    WeatherManager(context).getCurrentWeatherJson(it.latitude, it.longitude, object : WeatherManager.OnWeatherLoad {
-                        override fun onWeather(weather: OpenWeather) {
-                            val notificationManager = WeatherNotification(context)
-                            notificationManager.updateWeather(weather)
-                        }
-                    })
+                    Do.saveLocationToSharedPreferences(context, it.latitude, it.longitude)
                 }
+                WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
+                    override fun onWeather(weather: OpenWeather) {
+                        val notificationManager = WeatherNotification(context)
+                        notificationManager.updateWeather(weather)
+                    }
+                })
             }
-//            if(Do.getIsRegisteredForLocationUpdates(context)) {
-//                Do.logToFile("RefreshButtonReceiver - OnReceive - Register State: REQUEST Location Updates.")
-//                val mFusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-//                mFusedLocationClient.requestLocationUpdates(LocationHelper.createLocationRequest(), Do.getPendingIntent(context))
-//
-//                LocationHelper.setRequestingLocationUpdates(context, true)
-//                Do.logToFile("RefreshButtonReceiver - OnReceive - Register State: Location updates requested.")
-//            } else {
-//                Do.logError("RefreshButtonReceiver - OnReceive - Register State: DO NOT REQUEST Location Updates.", context)
-//            }
+
+            fusedLocationClient?.lastLocation?.addOnFailureListener {
+                Do.logError(it.message, context)
+                WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
+                    override fun onWeather(weather: OpenWeather) {
+                        val notificationManager = WeatherNotification(context)
+                        notificationManager.updateWeather(weather)
+                    }
+                })
+            }
         }
 
     }

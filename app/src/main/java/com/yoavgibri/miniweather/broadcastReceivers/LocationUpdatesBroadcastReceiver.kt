@@ -50,22 +50,23 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
                         val currentLat = BigDecimal(location.latitude).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
                         val currentLong = BigDecimal(location.longitude).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
 
-                        Do.logToFile("LUBroadcastReceiver - onReceive - initWeatherManager, waiting for OnWeather - Lat,Long: $currentLat,$currentLong", context)//, context)
-                        val weatherManager = WeatherManager(context)
-                        weatherManager.getCurrentWeatherJson(currentLat, currentLong, object : WeatherManager.OnWeatherLoad {
-                            override fun onWeather(weather: OpenWeather) {
-                                Do.logToFile("LUBroadcastReceiver - onWeather", context)
-                                val notification = WeatherNotification(context)
-                                notification.cancelNotification()
-                                notification.updateWeather(weather)
-                            }
-                        })
+                        Do.saveLocationToSharedPreferences(context, currentLat, currentLong)
                     } else {
                         Do.logError("LUBroadcastReceiver - onReceive - locations list is empty", context)
                     }
                 } else {
                     Do.logError("LUBroadcastReceiver - onReceive - result is null", context)
                 }
+
+
+                WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
+                    override fun onWeather(weather: OpenWeather) {
+                        Do.logToFile("LUBroadcastReceiver - onWeather", context)
+                        val notification = WeatherNotification(context)
+                        notification.cancelNotification()
+                        notification.updateWeather(weather)
+                    }
+                })
             }
         }
 

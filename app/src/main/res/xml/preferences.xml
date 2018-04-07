@@ -12,6 +12,12 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_degrees_unit" />
 
+    <Preference
+        android:title="Email The Developer"
+        android:key="@string/pref_key_send_feedback"
+        />
+
+
     <!-- This preference simply launches an intent when selected. Use this UI sparingly, per
          design guidelines. -->
     <!--<Preference android:title="@string/pref_title_system_sync_settings">-->

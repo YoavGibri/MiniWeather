@@ -19,6 +19,8 @@ import android.text.TextUtils
 import android.view.MenuItem
 import android.support.v4.app.NavUtils
 import com.yoavgibri.miniweather.R
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -75,6 +77,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             setHasOptionsMenu(true)
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.sp_key_units_format)))
+            findPreference(getString(R.string.pref_key_send_feedback)).setOnPreferenceClickListener { sendFeedback() }
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -85,6 +88,20 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             }
             return super.onOptionsItemSelected(item)
         }
+
+        private fun sendFeedback(): Boolean {
+            val address = arrayOf("yoavgibri@gmail.com")
+            val intent = Intent(Intent.ACTION_SENDTO)
+            intent.data = Uri.parse("mailto:") // only email apps should handle this
+            intent.putExtra(Intent.EXTRA_EMAIL, address)
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Mini Weather - user feedback")
+            if (intent.resolveActivity(context.packageManager) != null) {
+                startActivity(intent)
+            }
+            return true
+        }
+
+
     }
 
 

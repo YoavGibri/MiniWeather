@@ -11,13 +11,10 @@ import android.preference.PreferenceManager
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.view.View
-import com.yoavgibri.miniweather.activities.MainActivity
-import com.yoavgibri.miniweather.models.OpenWeather
 import android.widget.RemoteViews
-import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
+import com.yoavgibri.miniweather.activities.MainActivity
 import com.yoavgibri.miniweather.broadcastReceivers.RefreshButtonReceiver
-import com.yoavgibri.miniweather.broadcastReceivers.RefreshButtonReceiver.Companion.ACTION_PROCESS_UPDATES
-import java.util.*
+import com.yoavgibri.miniweather.models.OpenWeather
 
 
 /**

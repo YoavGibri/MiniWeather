@@ -131,6 +131,15 @@ class Do {
             notificationLayout.setViewVisibility(R.id.animationLightning, View.GONE)
         }
 
+        @SuppressLint("ApplySharedPref")
+        fun saveLocationToSharedPreferences(context: Context, latitude: Double, longitude: Double) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            val editor = sp.edit()
+            editor.putFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, latitude.toFloat())
+            editor.putFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, longitude.toFloat())
+            editor.commit()
+        }
+
 
     }
 

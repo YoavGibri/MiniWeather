@@ -104,7 +104,7 @@ private var isGPSEnabled = false
                 e.printStackTrace()
             }
         } else {
-            (mContext as AppCompatActivity).requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), DevActivity.PERMISSIONS_REQUEST)
+            (mContext as AppCompatActivity).requestPermissions(arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), DevActivity.PERMISSIONS_REQUEST)
         }
 
         return location

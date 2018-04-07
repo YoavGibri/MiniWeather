@@ -16,6 +16,9 @@ public class LocationHelper {
     companion object {
 
         private val KEY_LOCATION_UPDATES_REQUESTED: String? = "location-updates-requested"
+        val KEY_LAST_KNOWN_LATITUDE: String? = "last_known_latitude"
+        val KEY_LAST_KNOWN_LONGITUDE: String? = "last_known_longitude"
+
         fun setRequestingLocationUpdates(context: Context, requestUpdates: Boolean) {
             PreferenceManager.getDefaultSharedPreferences(context)
                     .edit()
@@ -69,27 +72,22 @@ public class LocationHelper {
         private val MAX_WAIT_TIME: Long = 2 * hour
 
         fun createLocationRequest() : LocationRequest {
-            val locationRequest = LocationRequest()
-
-            // Sets the desired interval for active location updates. This interval is
-            // inexact. You may not receive updates at all if no location sources are available, or
-            // you may receive them slower than requested. You may also receive updates faster than
-            // requested if other applications are requesting location at a faster interval.
-            // Note: apps running on "O" devices (regardless of targetSdkVersion) may receive updates
-            // less frequently than this interval when the app is no longer in the foreground.
-            locationRequest.interval = UPDATE_INTERVAL
-
-            // Sets the fastest rate for active location updates. This interval is exact, and your
-            // application will never receive updates faster than this value.
-            locationRequest.fastestInterval = FASTEST_UPDATE_INTERVAL
-
-            locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
-            // Sets the maximum time when batched location updates are delivered. Updates may be
-            // delivered sooner than this interval.
-            locationRequest.maxWaitTime = MAX_WAIT_TIME
-
-            return locationRequest
+            return LocationRequest().apply {
+                priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+                // Sets the desired interval for active location updates. This interval is
+                // inexact. You may not receive updates at all if no location sources are available, or
+                // you may receive them slower than requested. You may also receive updates faster than
+                // requested if other applications are requesting location at a faster interval.
+                // Note: apps running on "O" devices (regardless of targetSdkVersion) may receive updates
+                // less frequently than this interval when the app is no longer in the foreground.
+                interval = UPDATE_INTERVAL
+                // Sets the fastest rate for active location updates. This interval is exact, and your
+                // application will never receive updates faster than this value.
+                fastestInterval = FASTEST_UPDATE_INTERVAL
+                // Sets the maximum time when batched location updates are delivered. Updates may be
+                // delivered sooner than this interval.
+                maxWaitTime = MAX_WAIT_TIME
+            }
         }
 
 

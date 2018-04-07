@@ -19,9 +19,6 @@ class DevActivity : AppCompatActivity() {
     }
 
     private var currentLocation: CurrentLatLong? = null
-    private var currentLat: Double = 0.0
-    private var currentLong: Double = 0.0
-
     private val notification: WeatherNotification get() = WeatherNotification(this)
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private val TAG: String = "DevActivity"
@@ -59,7 +56,7 @@ class DevActivity : AppCompatActivity() {
         })
 
         weatherButton.setOnClickListener({
-            WeatherManager(this).getCurrentWeatherJson(currentLat, currentLong, object : WeatherManager.OnWeatherLoad {
+            WeatherManager(this).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
                 override fun onWeather(weather: OpenWeather) {
                     notification.updateWeather(weather)
                 }
@@ -130,9 +127,7 @@ class DevActivity : AppCompatActivity() {
         val status: Int? = currentLocation?.currentLatLong(this)
 
         if (status == 1) {
-//            Toast.makeText(this, "Latitude:***" + currentLocation?.currentLat + "\nLongitude:***" + currentLocation?.currentLong, Toast.LENGTH_LONG).show()
-            currentLat = currentLocation?.currentLat!!
-            currentLong = currentLocation?.currentLong!!
+            Do.saveLocationToSharedPreferences(this, currentLocation?.currentLat!!, currentLocation?.currentLong!!)
         }
 
     }
