@@ -10,6 +10,7 @@ import android.os.Build
 import android.preference.PreferenceManager
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationCompat.VISIBILITY_SECRET
 import android.view.View
 import android.widget.RemoteViews
 import com.yoavgibri.miniweather.activities.MainActivity
@@ -52,7 +53,8 @@ class WeatherNotification(val context: Context) {
                 .setTicker("")
                 .setSmallIcon(R.drawable.animated_walking_man)
                 .setChannelId(channelID)
-                .setSound(null)
+                .setVisibility(VISIBILITY_SECRET)
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -33,15 +33,27 @@ class WeatherManager(private var context: Context) {
         val currentLat = sP.getFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, 0f).toDouble()
         val currentLong = sP.getFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, 0f).toDouble()
 
-        val url = "http://api.openweathermap.org/data/2.5/weather?units=$unitsFormat&lat=$currentLat&lon=$currentLong&APPID=0234b7546d074c6839610dfd89210bee"
+        val currentLatString = "%.4f".format(currentLat)
+        val currentLongString = "%.4f".format(currentLong)
+
+        val url = "http://api.openweathermap.org/data/2.5/weather?units=$unitsFormat&lat=$currentLatString&lon=$currentLongString&APPID=0234b7546d074c6839610dfd89210bee"
         GetWeatherTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url)
-        Do.logToFile("LUBroadcastReceiver - onReceive - initWeatherManager, waiting for OnWeather - Lat,Long: $currentLat,$currentLong", context)
+        Do.logToFile("LUBroadcastReceiver - onReceive - initWeatherManager, waiting for OnWeather - Lat,Long: $currentLongString,$currentLongString", context)
     }
 
 
     internal inner class GetWeatherTask : AsyncTask<String, Void, String>() {
 
-        override fun doInBackground(vararg params: String): String? = URL(params[0]).readText()
+        override fun doInBackground(vararg params: String): String? {
+            var jsonString : String = ""
+            try {
+            jsonString = URL(params[0]).readText()
+
+            } catch (e: Exception){
+                Do.logError(e.message, context)
+            }
+            return jsonString
+        }
 
         override fun onPostExecute(jsonString: String) {
             try {
@@ -53,9 +65,9 @@ class WeatherManager(private var context: Context) {
 
             } catch (e: JSONException) {
                 e.printStackTrace()
-                Log.e("JSON", e.message)
+                Do.logError(e.message, context)
             } catch (e: Exception) {
-                Log.e("EXC", e.message)
+                Do.logError(e.message, context)
             }
 
 
