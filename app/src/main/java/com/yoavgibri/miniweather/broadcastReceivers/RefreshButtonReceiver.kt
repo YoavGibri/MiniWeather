@@ -22,8 +22,8 @@ class RefreshButtonReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         try {
-            Log.d(TAG, "=========== ONRECEIVE ============")
-            doOnReceive(context!!)
+            Do.logToFile("RefreshButtonReceiver - OnReceive", context!!)
+            doOnReceive(context)
         } catch (e: Exception) {
             Do.logError(e.message, context!!)
         }
@@ -37,26 +37,26 @@ class RefreshButtonReceiver : BroadcastReceiver() {
         fun doOnReceive(context: Context) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
+            val onWeather: WeatherManager.OnWeatherLoad = object : WeatherManager.OnWeatherLoad {
+                override fun onWeather(weather: OpenWeather) {
+                    val notificationManager = WeatherNotification(context)
+                    notificationManager.updateWeather(weather)
+                }
+            }
+
             fusedLocationClient?.lastLocation?.addOnSuccessListener {
+                Do.logToFile("RefreshButtonReceiver - OnReceive - LastLocation OnSuccess", context!!)
                 if (it != null) {
                     Do.saveLocationToSharedPreferences(context, it.latitude, it.longitude)
+                } else {
+                    Do.logError("RefreshButtonReceiver - OnReceive - LastLocation OnSuccess - it is null", context)
                 }
-                WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
-                    override fun onWeather(weather: OpenWeather) {
-                        val notificationManager = WeatherNotification(context)
-                        notificationManager.updateWeather(weather)
-                    }
-                })
+                WeatherManager(context).getCurrentWeatherJson(onWeather)
             }
 
             fusedLocationClient?.lastLocation?.addOnFailureListener {
                 Do.logError(it.message, context)
-                WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
-                    override fun onWeather(weather: OpenWeather) {
-                        val notificationManager = WeatherNotification(context)
-                        notificationManager.updateWeather(weather)
-                    }
-                })
+                WeatherManager(context).getCurrentWeatherJson(onWeather)
             }
         }
 

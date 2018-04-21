@@ -2,9 +2,9 @@
 
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
-    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <!-- NOTE: ListPreference'timeFormat summary should be set to its value by the activity code. -->
     <ListPreference
-        android:defaultValue="metric"
+        android:defaultValue="Metric"
         android:entries="@array/pref_degrees_unit_titles"
         android:entryValues="@array/pref_degrees_unit_values"
         android:key="@string/sp_key_units_format"
@@ -12,8 +12,17 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_degrees_unit" />
 
+    <ListPreference
+        android:defaultValue="24_hours"
+        android:entries="@array/pref_time_format_titles"
+        android:entryValues="@array/pref_time_format_values"
+        android:key="@string/sp_key_time_format"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_time_format" />
+
     <Preference
-        android:title="Email The Developer"
+        android:title="Let Me Know What You Think"
         android:key="@string/pref_key_send_feedback"
         />
 

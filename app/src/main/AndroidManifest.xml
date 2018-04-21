@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yoavgibri.miniweather">
 
-    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -40,13 +40,14 @@
         <receiver
             android:name=".broadcastReceivers.LocationUpdatesBroadcastReceiver"
             android:exported="true">
-            <!--<intent-filter>-->
-                <!--<action android:name="com.yoavgibri.miniweather.LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES" />-->
-            <!--</intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="com.yoavgibri.miniweather.LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES" /> -->
+            <!-- </intent-filter> -->
         </receiver>
         <receiver
             android:name=".broadcastReceivers.RefreshButtonReceiver"
-            android:exported="true"/>
+            android:exported="true" />
         <!-- <service android:name=".LocationUpdatesIntentService" /> -->
 
         <activity
@@ -57,6 +58,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yoavgibri.miniweather.activities.MainActivity" />
         </activity>
+
+        <receiver
+            android:name=".broadcastReceivers.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>

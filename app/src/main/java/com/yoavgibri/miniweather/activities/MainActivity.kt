@@ -22,6 +22,12 @@ import com.google.android.gms.tasks.Task
 import com.yoavgibri.miniweather.R
 import com.yoavgibri.miniweather.models.OpenWeather
 import kotlinx.android.synthetic.main.activity_main.*
+import com.yoavgibri.miniweather.broadcastReceivers.AlarmReceiver
+import android.content.Context.ALARM_SERVICE
+import android.app.AlarmManager
+import android.content.Context
+import android.os.SystemClock
+
 
 class MainActivity : AppCompatActivity() {
     private var mFusedLocationClient: FusedLocationProviderClient? = null
@@ -55,7 +61,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
     private fun registerToggleOnCheck(isChecked: Boolean) {
+        val alarmHelper = AlarmManagerHelper(this)
         if (isChecked) {
             if (mFusedLocationClient != null) {
                 Do.setIsRegisteredForLocationUpdates(this, true)
@@ -66,7 +74,11 @@ class MainActivity : AppCompatActivity() {
                 val task: Task<LocationSettingsResponse> = client.checkLocationSettings(locationSettingRequest)
                 task.addOnSuccessListener { locationSettingsResponse ->
                     requestLastLocationAndUpdateWeather()
-                    mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
+//                    mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
+
+                    // ALARM MANAGER:
+                    alarmHelper.setRecurringAlarm()
+//                            AlarmManager.INTERVAL_HALF_HOUR, alarmIntent)
                 }
 
                 task.addOnFailureListener { exception ->
@@ -91,6 +103,7 @@ class MainActivity : AppCompatActivity() {
             Do.setIsRegisteredForLocationUpdates(this, false)
             if (mFusedLocationClient != null) mFusedLocationClient?.removeLocationUpdates(getPendingIntent())
             notificationManager.cancelNotification()
+            alarmHelper.cancelAlarm()
             Log.i(TAG, "MainActivity - registerSwitch OnClick - UnChecked")
         }
     }
@@ -103,7 +116,6 @@ class MainActivity : AppCompatActivity() {
                     //  save last location to sharedPreferences:
                     Do.saveLocationToSharedPreferences(this, it.latitude, it.longitude)
                 }
-
                 WeatherManager(this).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
                     override fun onWeather(weather: OpenWeather) {
                         notificationManager.updateWeather(weather)

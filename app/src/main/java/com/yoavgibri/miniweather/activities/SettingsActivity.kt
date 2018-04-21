@@ -77,6 +77,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             setHasOptionsMenu(true)
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.sp_key_units_format)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.sp_key_time_format)))
             findPreference(getString(R.string.pref_key_send_feedback)).setOnPreferenceClickListener { sendFeedback() }
         }
 

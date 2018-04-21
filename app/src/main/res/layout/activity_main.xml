@@ -73,7 +73,7 @@
                 android:background="@color/cardview_light_background"
                 android:elevation="10dp"
                 android:padding="10dp"
-                android:text="@string/register_to_weather_updates"
+                android:text="@string/activate_weather_notification_icon"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>

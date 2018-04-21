@@ -38,36 +38,42 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
 
         if (intent != null) {
 
-            if (intent.action == ACTION_PROCESS_UPDATES) {
+//            if (intent.action == ACTION_PROCESS_UPDATES) {
 
-                val result = LocationResult.extractResult(intent)
-                if (result != null) {
-                    val locations = result.locations
-                    if (locations.size > 0) {
+            val result = LocationResult.extractResult(intent)
+            if (result != null) {
+                val locations = result.locations
+                if (locations.size > 0) {
 
-                        val location = locations[0]
+                    val location = locations[0]
 
-                        val currentLat = BigDecimal(location.latitude).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
-                        val currentLong = BigDecimal(location.longitude).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
+                    val currentLat = BigDecimal(location.latitude).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
+                    val currentLong = BigDecimal(location.longitude).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
 
-                        Do.saveLocationToSharedPreferences(context, currentLat, currentLong)
-                    } else {
-                        Do.logError("LUBroadcastReceiver - onReceive - locations list is empty", context)
-                    }
+                    Do.saveLocationToSharedPreferences(context, currentLat, currentLong)
                 } else {
-                    Do.logError("LUBroadcastReceiver - onReceive - result is null", context)
+                    Do.logError("LUBroadcastReceiver - onReceive - locations list is empty", context)
                 }
-
-
-                WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
-                    override fun onWeather(weather: OpenWeather) {
-                        Do.logToFile("LUBroadcastReceiver - onWeather", context)
-                        val notification = WeatherNotification(context)
-                        notification.cancelNotification()
-                        notification.updateWeather(weather)
-                    }
-                })
+            } else {
+                Do.logError("LUBroadcastReceiver - onReceive - result is null", context)
             }
+
+            // remark because getCurrentWeatherJson is calls from the alarm manager
+//            WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
+//                override fun onWeather(weather: OpenWeather) {
+//                    Do.logToFile("LUBroadcastReceiver - onWeather", context)
+//                    val notification = WeatherNotification(context)
+//                    notification.cancelNotification()
+//                    notification.updateWeather(weather)
+//                }
+//            })
+
+
+//            } else {
+//                Do.logError("LUBroadcastReceiver - onReceive - action is ${intent.action}", context)
+//            }
+        } else {
+            Do.logError("LUBroadcastReceiver - onReceive - intent is null", context)
         }
 
 

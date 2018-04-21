@@ -55,7 +55,7 @@ class Do {
         }
 
         fun logError(text: String?, context: Context) {
-            logToFile(text, context)
+            logToFile("Error: $text", context)
         }
 
         fun getPendingIntent(context: Context): PendingIntent? {
@@ -71,7 +71,7 @@ class Do {
 //        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             val intent = Intent(context, LocationUpdatesBroadcastReceiver::class.java)
-            intent.action = LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES
+//            intent.action = LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 

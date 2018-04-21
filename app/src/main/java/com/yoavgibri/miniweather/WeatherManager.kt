@@ -38,7 +38,7 @@ class WeatherManager(private var context: Context) {
 
         val url = "http://api.openweathermap.org/data/2.5/weather?units=$unitsFormat&lat=$currentLatString&lon=$currentLongString&APPID=0234b7546d074c6839610dfd89210bee"
         GetWeatherTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url)
-        Do.logToFile("LUBroadcastReceiver - onReceive - initWeatherManager, waiting for OnWeather - Lat,Long: $currentLongString,$currentLongString", context)
+        Do.logToFile("WeatherManager - getCurrentWeatherJson, waiting for OnWeather - Lat,Long: $currentLatString,$currentLongString", context)
     }
 
 

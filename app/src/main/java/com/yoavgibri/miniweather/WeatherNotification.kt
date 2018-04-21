@@ -16,6 +16,8 @@ import android.widget.RemoteViews
 import com.yoavgibri.miniweather.activities.MainActivity
 import com.yoavgibri.miniweather.broadcastReceivers.RefreshButtonReceiver
 import com.yoavgibri.miniweather.models.OpenWeather
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -40,14 +42,11 @@ class WeatherNotification(val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channelID = initNotificationChannel()
         }
-        //val notificationLayout = RemoteViews(context.packageName, R.layout.notification_custom_view)
 
-        //val buttonRefresh
 
         return NotificationCompat.Builder(context, channelID)
                 .setAutoCancel(false)
                 .setOngoing(true)
-//                .setStyle(android.support.v4.media.app.NotificationCompat.DecoratedMediaCustomViewStyle())
                 .setCustomContentView(notificationLayout)
                 .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
                 .setTicker("")
@@ -76,14 +75,14 @@ class WeatherNotification(val context: Context) {
         notificationManager.notify(STATUS_NOTIFICATION_ID, builder.build())
     }
 
-    private var isMiui: Boolean = false
-
     fun updateWeather(weather: OpenWeather) {
         try {
             val iconName = weather.weather[0].icon
             val city = weather.name
             val temp = weather.main.temp.toFloat().toInt()
             val description = weather.weather[0].description
+
+            val currentTime = getCurrentTimeString()
 
             val message = "$temp°C     $description"
 
@@ -95,9 +94,9 @@ class WeatherNotification(val context: Context) {
 
             Do.hideAllAnimations(notificationLayout)
             notificationLayout.setTextViewText(R.id.textViewCity, city)
-//            notificationLayout.setTextViewText(R.id.textViewCity, Calendar.getInstance().time.toString())
             notificationLayout.setTextViewText(R.id.textViewTemperature, temp.toString())
             notificationLayout.setTextViewText(R.id.textViewDescription, description)
+            notificationLayout.setTextViewText(R.id.textViewLastUpdate, currentTime)
             notificationLayout.setViewVisibility(animationViewId, 0)
             notificationLayout.setProgressBar(animationViewId, 2, 1, true)
 
@@ -120,6 +119,13 @@ class WeatherNotification(val context: Context) {
         } catch (e: Exception) {
             Do.logError(e.message, context)
         }
+    }
+
+    private fun getCurrentTimeString(): String? {
+        val sP = PreferenceManager.getDefaultSharedPreferences(context)
+        val unitsFormat = sP.getString(context.getString(R.string.sp_key_time_format), "24_hours")
+        val timeFormat = if (unitsFormat == "24_hours") "HH:mm" else "hh:mm a"
+        return SimpleDateFormat(timeFormat).format(Calendar.getInstance().time)
     }
 
     private fun setMiuiCustomizationAllow(notification: Notification) {
@@ -159,8 +165,5 @@ class WeatherNotification(val context: Context) {
         return notifications.any { it.id == STATUS_NOTIFICATION_ID }
     }
 
-    fun onRefreshClick(v: View) {
-
-    }
 
 }
