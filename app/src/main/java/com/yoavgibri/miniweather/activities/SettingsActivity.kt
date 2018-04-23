@@ -1,7 +1,6 @@
 package com.yoavgibri.miniweather.activities
 
 import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -18,9 +17,8 @@ import android.preference.RingtonePreference
 import android.text.TextUtils
 import android.view.MenuItem
 import android.support.v4.app.NavUtils
+import android.text.format.DateFormat
 import com.yoavgibri.miniweather.R
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -76,8 +74,12 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             addPreferencesFromResource(R.xml.preferences)
             setHasOptionsMenu(true)
 
+
+            val timeFormatPreference = findPreference(getString(R.string.sp_key_time_format))
+            bindPreferenceSummaryToValue(timeFormatPreference)
+            timeFormatPreference.setDefaultValue(if (DateFormat.is24HourFormat(context))  "24_hours" else "12_hours")
+
             bindPreferenceSummaryToValue(findPreference(getString(R.string.sp_key_units_format)))
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.sp_key_time_format)))
             findPreference(getString(R.string.pref_key_send_feedback)).setOnPreferenceClickListener { sendFeedback() }
         }
 

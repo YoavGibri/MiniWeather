@@ -11,7 +11,7 @@ import android.preference.PreferenceManager
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.VISIBILITY_SECRET
-import android.view.View
+import android.text.format.DateFormat
 import android.widget.RemoteViews
 import com.yoavgibri.miniweather.activities.MainActivity
 import com.yoavgibri.miniweather.broadcastReceivers.RefreshButtonReceiver
@@ -123,9 +123,10 @@ class WeatherNotification(val context: Context) {
 
     private fun getCurrentTimeString(): String? {
         val sP = PreferenceManager.getDefaultSharedPreferences(context)
-        val unitsFormat = sP.getString(context.getString(R.string.sp_key_time_format), "24_hours")
-        val timeFormat = if (unitsFormat == "24_hours") "HH:mm" else "hh:mm a"
-        return SimpleDateFormat(timeFormat).format(Calendar.getInstance().time)
+        val defFormatValue = if (DateFormat.is24HourFormat(context))  "24_hours" else "12_hours"
+        val timeFormat = sP.getString(context.getString(R.string.sp_key_time_format), defFormatValue)
+        val pattern = if (timeFormat == "24_hours") "HH:mm" else "hh:mm a"
+        return SimpleDateFormat(pattern).format(Calendar.getInstance().time)
     }
 
     private fun setMiuiCustomizationAllow(notification: Notification) {
