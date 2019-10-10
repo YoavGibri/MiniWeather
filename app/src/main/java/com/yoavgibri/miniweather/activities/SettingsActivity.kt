@@ -18,7 +18,11 @@ import android.text.TextUtils
 import android.view.MenuItem
 import android.support.v4.app.NavUtils
 import android.text.format.DateFormat
+import com.yoavgibri.miniweather.AlarmManagerHelper
+import com.yoavgibri.miniweather.App
 import com.yoavgibri.miniweather.R
+import com.yoavgibri.miniweather.views.NumberPickerPreference
+import java.lang.ClassCastException
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -77,9 +81,14 @@ class SettingsActivity : AppCompatPreferenceActivity() {
 
             val timeFormatPreference = findPreference(getString(R.string.sp_key_time_format))
             bindPreferenceSummaryToValue(timeFormatPreference)
-            timeFormatPreference.setDefaultValue(if (DateFormat.is24HourFormat(context))  "24_hours" else "12_hours")
+            timeFormatPreference.setDefaultValue(if (DateFormat.is24HourFormat(context)) "24_hours" else "12_hours")
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.sp_key_units_format)))
+
+            val refreshIntervalPreference = findPreference(getString(R.string.sp_key_refresh_interval))
+            refreshIntervalPreference.setDefaultValue("30")
+            bindPreferenceSummaryToValue(refreshIntervalPreference)
+
             findPreference(getString(R.string.pref_key_send_feedback)).setOnPreferenceClickListener { sendFeedback() }
         }
 
@@ -91,6 +100,8 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             }
             return super.onOptionsItemSelected(item)
         }
+
+
 
         private fun sendFeedback(): Boolean {
             val address = arrayOf("yoavgibri@gmail.com")
@@ -118,39 +129,20 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             val stringValue = value.toString()
 
             if (preference is ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                val listPreference = preference
-                val index = listPreference.findIndexOfValue(stringValue)
+                // For list preferences, look up the correct display value in the preference's 'entries' list.
+                val index = preference.findIndexOfValue(stringValue)
 
                 // Set the summary to reflect the new value.
                 preference.setSummary(
                         if (index >= 0)
-                            listPreference.entries[index]
+                            preference.entries[index]
                         else
                             null)
 
-            } else if (preference is RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent)
+            } else if (preference is NumberPickerPreference) {
+                AlarmManagerHelper(App.context).setRecurringAlarm(value as Int)
+                preference.summary = stringValue
 
-                } else {
-                    val ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue))
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null)
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        val name = ringtone.getTitle(preference.getContext())
-                        preference.setSummary(name)
-                    }
-                }
 
             } else {
                 // For all other preferences, set the summary to the value's
@@ -183,10 +175,17 @@ class SettingsActivity : AppCompatPreferenceActivity() {
 
             // Trigger the listener immediately with the preference's
             // current value.
-            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.context)
-                            .getString(preference.key, ""))
+            try {
+                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                        PreferenceManager
+                                .getDefaultSharedPreferences(preference.context)
+                                .getString(preference.key, ""))
+            } catch (e: ClassCastException) {
+                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                        PreferenceManager
+                                .getDefaultSharedPreferences(preference.context)
+                                .getInt(preference.key, 0))
+            }
         }
     }
 }

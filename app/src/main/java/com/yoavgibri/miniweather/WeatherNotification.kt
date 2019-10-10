@@ -6,12 +6,14 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.preference.PreferenceManager
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.VISIBILITY_SECRET
 import android.text.format.DateFormat
+import android.view.View
 import android.widget.RemoteViews
 import com.yoavgibri.miniweather.activities.MainActivity
 import com.yoavgibri.miniweather.broadcastReceivers.RefreshButtonReceiver
@@ -50,7 +52,6 @@ class WeatherNotification(val context: Context) {
                 .setCustomContentView(notificationLayout)
                 .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
                 .setTicker("")
-                .setSmallIcon(R.drawable.animated_walking_man)
                 .setChannelId(channelID)
                 .setVisibility(VISIBILITY_SECRET)
 
@@ -97,8 +98,9 @@ class WeatherNotification(val context: Context) {
             notificationLayout.setTextViewText(R.id.textViewTemperature, temp.toString())
             notificationLayout.setTextViewText(R.id.textViewDescription, description)
             notificationLayout.setTextViewText(R.id.textViewLastUpdate, currentTime)
-            notificationLayout.setViewVisibility(animationViewId, 0)
+            notificationLayout.setViewVisibility(animationViewId, View.VISIBLE)
             notificationLayout.setProgressBar(animationViewId, 2, 1, true)
+
 
             val updateWeatherIntent: PendingIntent = PendingIntent.getBroadcast(context, 420, Intent(context, RefreshButtonReceiver::class.java), 0)
             notificationLayout.setOnClickPendingIntent(R.id.buttonRefresh, updateWeatherIntent)
@@ -106,6 +108,7 @@ class WeatherNotification(val context: Context) {
 
             val notification: Notification = builder
                     .setSmallIcon(iconRes)
+                    //.setLargeIcon(Do.textAsBitmap("11", 100f, Color.WHITE)) //does not work
                     .setCustomContentView(notificationLayout)
                     .build()
 
@@ -123,7 +126,7 @@ class WeatherNotification(val context: Context) {
 
     private fun getCurrentTimeString(): String? {
         val sP = PreferenceManager.getDefaultSharedPreferences(context)
-        val defFormatValue = if (DateFormat.is24HourFormat(context))  "24_hours" else "12_hours"
+        val defFormatValue = if (DateFormat.is24HourFormat(context)) "24_hours" else "12_hours"
         val timeFormat = sP.getString(context.getString(R.string.sp_key_time_format), defFormatValue)
         val pattern = if (timeFormat == "24_hours") "HH:mm" else "hh:mm a"
         return SimpleDateFormat(pattern).format(Calendar.getInstance().time)

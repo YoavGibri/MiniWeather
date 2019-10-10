@@ -4,6 +4,10 @@ import android.content.Context
 import android.location.Location
 import android.preference.PreferenceManager
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.tasks.Task
 import java.text.DateFormat
 import java.util.*
 
@@ -90,6 +94,11 @@ public class LocationHelper {
             }
         }
 
+        fun checkLocationSettings(context: Context): Task<LocationSettingsResponse> {
+            val locationSettingRequest = LocationSettingsRequest.Builder().addLocationRequest(LocationHelper.createLocationRequest()).build()
+            val client = LocationServices.getSettingsClient(context)
+            return client.checkLocationSettings(locationSettingRequest)
+        }
 
 
     }

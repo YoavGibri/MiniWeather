@@ -6,16 +6,24 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import android.widget.TextView
 import android.widget.Toast
 import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import android.graphics.Paint.Align
+import android.graphics.Paint.ANTI_ALIAS_FLAG
+
+
 
 /**
  * Created by Yoav on 25/11/17.
@@ -138,6 +146,43 @@ class Do {
             editor.putFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, latitude.toFloat())
             editor.putFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, longitude.toFloat())
             editor.commit()
+        }
+
+
+        fun getimageFromText(context: Context, text: String): Bitmap {
+            val textView = TextView(context)
+            textView.text = text
+            textView.isDrawingCacheEnabled = true
+            textView.destroyDrawingCache()
+            textView.buildDrawingCache()
+
+            val drawingCache = textView.drawingCache
+            val width = drawingCache.width
+            val height = drawingCache.height
+            val copy: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val pixels = intArrayOf(width * height)
+            drawingCache.getPixels(pixels, 0, width, 0, 0, width, height)
+            copy.setPixels(pixels, 0, width, 0, 0, width, height)
+            return copy
+        }
+
+        fun textAsBitmap(text: String, textSize: Float, textColor: Int): Bitmap {
+            // adapted from https://stackoverflow.com/a/8799344/1476989
+            val paint = Paint(ANTI_ALIAS_FLAG)
+            paint.textSize = textSize
+            paint.color = textColor
+            paint.textAlign = Align.LEFT
+            val baseline = -paint.ascent() // ascent() is negative
+            var width = (paint.measureText(text) + 0.0f).toInt() // round
+            var height = (baseline + paint.descent() + 0.0f).toInt()
+
+            val trueWidth = width
+            if (width > height) height = width else width = height
+            val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+            val canvas = Canvas(image)
+            canvas.drawText(text, width / 2f - trueWidth / 2f, baseline, paint)
+            return image
         }
 
 

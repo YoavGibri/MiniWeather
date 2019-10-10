@@ -10,23 +10,19 @@ import com.yoavgibri.miniweather.*
 import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.Manifest.permission.*
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.IntentSender
+import android.graphics.Color
 import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v7.app.AlertDialog
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.Task
 import com.yoavgibri.miniweather.R
 import com.yoavgibri.miniweather.models.OpenWeather
 import kotlinx.android.synthetic.main.activity_main.*
-import com.yoavgibri.miniweather.broadcastReceivers.AlarmReceiver
-import android.content.Context.ALARM_SERVICE
-import android.app.AlarmManager
-import android.content.Context
-import android.os.SystemClock
 
 
 class MainActivity : AppCompatActivity() {
@@ -55,33 +51,35 @@ class MainActivity : AppCompatActivity() {
             return@setOnLongClickListener true
         }
 
-        registerToggle.setOnCheckedChangeListener({ buttonView, isChecked ->
-            registerToggleOnCheck(isChecked)
-        })
+        registerToggle.setOnCheckedChangeListener{ _, isChecked ->registerToggleOnCheck(isChecked)}
+
+        //setImageFromText()
 
     }
 
 
+//    private fun setImageFromText(){
+//        val bitmap = Do.textAsBitmap("hello", 300f, Color.BLACK)
+//        testImage.setImageBitmap(bitmap)
+//    }
+
+
+    @SuppressLint("MissingPermission")
     private fun registerToggleOnCheck(isChecked: Boolean) {
         val alarmHelper = AlarmManagerHelper(this)
         if (isChecked) {
             if (mFusedLocationClient != null) {
                 Do.setIsRegisteredForLocationUpdates(this, true)
 
+                val locationSettingResponse = LocationHelper.checkLocationSettings(this)
 
-                val locationSettingRequest = LocationSettingsRequest.Builder().addLocationRequest(LocationHelper.createLocationRequest()).build()
-                val client = LocationServices.getSettingsClient(this)
-                val task: Task<LocationSettingsResponse> = client.checkLocationSettings(locationSettingRequest)
-                task.addOnSuccessListener { locationSettingsResponse ->
-                    requestLastLocationAndUpdateWeather()
-//                    mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
-
-                    // ALARM MANAGER:
+                locationSettingResponse.addOnSuccessListener { locationSettingsResponse ->
+                    requestLastLocationAndSetNotifiction()
+                    mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
                     alarmHelper.setRecurringAlarm()
-//                            AlarmManager.INTERVAL_HALF_HOUR, alarmIntent)
                 }
 
-                task.addOnFailureListener { exception ->
+                locationSettingResponse.addOnFailureListener { exception ->
                     if (exception is ResolvableApiException) {
                         // Location settings are not satisfied, but this can be fixed by showing the user a dialog.
                         try {
@@ -108,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestLastLocationAndUpdateWeather() {
+    private fun requestLastLocationAndSetNotifiction() {
         if (checkSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
             mFusedLocationClient?.lastLocation?.addOnSuccessListener {
 
@@ -178,12 +176,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_SETTINGS) {
-            requestLastLocationAndUpdateWeather()
+            requestLastLocationAndSetNotifiction()
         }
 
         if (requestCode == REQUEST_CODE_CHECK_LOCATION_SETTINGS) {
             if (resultCode == Activity.RESULT_OK) {
-                requestLastLocationAndUpdateWeather()
+                requestLastLocationAndSetNotifiction()
             } else {
                 val snackbar: Snackbar = Snackbar.make(findViewById(R.id.rootLayout), getString(R.string.turn_on_location_message), Snackbar.LENGTH_INDEFINITE)
                 snackbar.setAction("TURN ON", { startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) })

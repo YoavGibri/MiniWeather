@@ -81,6 +81,14 @@
 
     </android.support.v7.widget.CardView>
 
+    <!--<ImageView-->
+        <!--android:id="@+id/testImage"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:scaleType="fitCenter"-->
+        <!--android:src="@drawable/web_hi_res_512"-->
+        <!--/>-->
+
     <TextView
         android:id="@+id/versionTextView"
         android:layout_width="wrap_content"

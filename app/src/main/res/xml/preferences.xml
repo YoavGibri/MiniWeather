@@ -21,16 +21,21 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_time_format" />
 
-    <Preference
-        android:title="Let Me Know What You Think"
-        android:key="@string/pref_key_send_feedback"
+    <com.yoavgibri.miniweather.views.NumberPickerPreference
+        android:key="@string/sp_key_refresh_interval"
+        android:title="@string/pref_title_refresh_interval"
+        android:defaultValue="@integer/number_picker_default_value"
         />
+
+    <Preference
+        android:key="@string/pref_key_send_feedback"
+        android:title="Let me know what you think" />
 
 
     <!-- This preference simply launches an intent when selected. Use this UI sparingly, per
          design guidelines. -->
     <!--<Preference android:title="@string/pref_title_system_sync_settings">-->
-        <!--<intent android:action="android.settings.SYNC_SETTINGS" />-->
+    <!--<intent android:action="android.settings.SYNC_SETTINGS" />-->
     <!--</Preference>-->
 
 </PreferenceScreen>
