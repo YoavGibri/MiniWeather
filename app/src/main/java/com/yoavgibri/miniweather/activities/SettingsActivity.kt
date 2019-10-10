@@ -141,7 +141,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
 
             } else if (preference is NumberPickerPreference) {
                 AlarmManagerHelper(App.context).setRecurringAlarm(value as Int)
-                preference.summary = stringValue
+                preference.summary = "$stringValue Minutes"
 
 
             } else {
