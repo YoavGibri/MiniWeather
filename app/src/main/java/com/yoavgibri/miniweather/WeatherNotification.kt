@@ -1,5 +1,6 @@
 package com.yoavgibri.miniweather
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -16,6 +17,7 @@ import android.text.format.DateFormat
 import android.view.View
 import android.widget.RemoteViews
 import com.yoavgibri.miniweather.activities.MainActivity
+import com.yoavgibri.miniweather.activities.SettingsActivity
 import com.yoavgibri.miniweather.broadcastReceivers.RefreshButtonReceiver
 import com.yoavgibri.miniweather.models.OpenWeather
 import java.text.SimpleDateFormat
@@ -95,7 +97,7 @@ class WeatherNotification(val context: Context) {
 
             Do.hideAllAnimations(notificationLayout)
             notificationLayout.setTextViewText(R.id.textViewCity, city)
-            notificationLayout.setTextViewText(R.id.textViewTemperature, temp.toString())
+            notificationLayout.setTextViewText(R.id.textViewTemperature, temp.toString() + Do.getDegreesSymbol())
             notificationLayout.setTextViewText(R.id.textViewDescription, description)
             notificationLayout.setTextViewText(R.id.textViewLastUpdate, currentTime)
             notificationLayout.setViewVisibility(animationViewId, View.VISIBLE)
@@ -118,20 +120,22 @@ class WeatherNotification(val context: Context) {
 
 
             notificationManager.notify(STATUS_NOTIFICATION_ID, notification)
-            Do.logToFile("WeatherNotification - updateWeather - " + message, context)
+
+            Do.logToFile("WeatherNotification - updateWeather - $message", context)
+
         } catch (e: Exception) {
             Do.logError(e.message, context)
         }
     }
 
     private fun getCurrentTimeString(): String? {
-        val sP = PreferenceManager.getDefaultSharedPreferences(context)
-        val defFormatValue = if (DateFormat.is24HourFormat(context)) "24_hours" else "12_hours"
-        val timeFormat = sP.getString(context.getString(R.string.sp_key_time_format), defFormatValue)
-        val pattern = if (timeFormat == "24_hours") "HH:mm" else "hh:mm a"
-        return SimpleDateFormat(pattern).format(Calendar.getInstance().time)
+        val defFormatValue = if (DateFormat.is24HourFormat(context)) SettingsActivity.TimeFormat.hours_24 else SettingsActivity.TimeFormat.hours_12
+        val timeFormat = SP.getString(context.getString(R.string.sp_key_time_format), defFormatValue.toString())
+        val pattern = if (timeFormat == SettingsActivity.TimeFormat.hours_24.toString()) "HH:mm" else "hh:mm a"
+        return SimpleDateFormat(pattern, Locale.getDefault()).format(Calendar.getInstance().time)
     }
 
+    @SuppressLint("PrivateApi")
     private fun setMiuiCustomizationAllow(notification: Notification) {
         try {
             notification.color = context.getColor(R.color.white)

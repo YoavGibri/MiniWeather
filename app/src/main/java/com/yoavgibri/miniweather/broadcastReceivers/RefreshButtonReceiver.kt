@@ -45,7 +45,7 @@ class RefreshButtonReceiver : BroadcastReceiver() {
             }
 
             fusedLocationClient?.lastLocation?.addOnSuccessListener {
-                Do.logToFile("RefreshButtonReceiver - OnReceive - LastLocation OnSuccess", context!!)
+                Do.logToFile("RefreshButtonReceiver - OnReceive - LastLocation OnSuccess", context)
                 if (it != null) {
                     Do.saveLocationToSharedPreferences(context, it.latitude, it.longitude)
                 } else {

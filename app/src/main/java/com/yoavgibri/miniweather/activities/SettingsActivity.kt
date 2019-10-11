@@ -181,4 +181,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             }
         }
     }
+
+    enum class UnitSystem{metric, imperial}
+    enum class TimeFormat{hours_12, hours_24}
 }

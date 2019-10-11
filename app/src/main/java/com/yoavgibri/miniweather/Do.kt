@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Paint.Align
 import android.graphics.Paint.ANTI_ALIAS_FLAG
-
+import com.yoavgibri.miniweather.activities.SettingsActivity
 
 
 /**
@@ -148,6 +148,30 @@ class Do {
             editor.commit()
         }
 
+        fun getDefaultUnitSystem(): String {
+            val currentLocale = Locale.getDefault()
+            //val unitSystem = App.context.resources.getStringArray(R.array.pref_degrees_unit_values)
+
+            return when (currentLocale.country.toUpperCase(currentLocale)) {
+                // UK, UK, Myanmar, Liberia,
+                "US", "GB", "MM", "LR" -> SettingsActivity.UnitSystem.imperial.toString()
+                else -> SettingsActivity.UnitSystem.metric.toString()
+
+            }
+
+        }
+
+        fun getDegreesSymbol(): String {
+            return when (getUnitFormat()) {
+                "Metric" -> "°C"
+                "Imperial" -> "°F"
+                "Default" -> "K"
+                else -> "°"
+            }
+        }
+
+        fun getUnitFormat(): String = SP.getString(App.context.getString(R.string.sp_key_units_format), getDefaultUnitSystem())
+
 
 //        fun getimageFromText(context: Context, text: String): Bitmap {
 //            val textView = TextView(context)
@@ -187,5 +211,4 @@ class Do {
 
 
     }
-
 }

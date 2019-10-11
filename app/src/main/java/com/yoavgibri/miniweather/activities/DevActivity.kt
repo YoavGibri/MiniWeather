@@ -40,7 +40,7 @@ class DevActivity : AppCompatActivity() {
 
 
     private fun initEvents() {
-        buttonStop.setOnClickListener({
+        buttonStop.setOnClickListener {
             if (notification.isShowing()) {
                 notification.cancelNotification()
                 Do.logToFile("notification canceled!", this)
@@ -50,26 +50,26 @@ class DevActivity : AppCompatActivity() {
                 Do.logToFile("notification set!", this)
                 buttonStop.setText(R.string.stop)
             }
-        })
+        }
 
-        walkingManButton.setOnClickListener({
+        walkingManButton.setOnClickListener {
             notification.showIconOnly(R.drawable.animated_walking_man)
-        })
+        }
 
-        weatherButton.setOnClickListener({
+        weatherButton.setOnClickListener {
             WeatherManager(this).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
                 override fun onWeather(weather: OpenWeather) {
                     notification.updateWeather(weather)
                 }
             })
-        })
+        }
 
         weatherButton.setOnLongClickListener {
             Crashlytics.getInstance().crash()
             true }
 
 
-        registerLocationUpdatesButton.setOnClickListener({
+        registerLocationUpdatesButton.setOnClickListener {
             try {
 //                if (LocationHelper.getRequestingLocationUpdates(this)) {
                 if (notification.isShowing()) {
@@ -89,7 +89,7 @@ class DevActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
 
-        })
+        }
 
         //buttonCrash.setOnClickListener { Crashlytics.getInstance().crash() }
     }
