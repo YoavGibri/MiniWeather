@@ -9,9 +9,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.preference.PreferenceManager
-import android.support.annotation.RequiresApi
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationCompat.VISIBILITY_SECRET
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.VISIBILITY_SECRET
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.RemoteViews

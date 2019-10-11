@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/textViewCity"
-            style="@style/TextAppearance.AppCompat.Notification.Title"
+            style="@style/TextAppearance.Compat.Notification.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@+id/textViewTemperature"
-                style="@style/TextAppearance.AppCompat.Notification.Info"
+                style="@style/TextAppearance.Compat.Notification.Info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/textViewDegUnit"
-                style="@style/TextAppearance.AppCompat.Notification.Info"
+                style="@style/TextAppearance.Compat.Notification.Info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -47,7 +47,7 @@
 
             <TextView
                 android:id="@+id/textViewDescription"
-                style="@style/TextAppearance.AppCompat.Notification.Info"
+                style="@style/TextAppearance.Compat.Notification.Info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"

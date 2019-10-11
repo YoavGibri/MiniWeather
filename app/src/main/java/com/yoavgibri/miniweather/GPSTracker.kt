@@ -6,7 +6,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.yoavgibri.miniweather.activities.DevActivity
 
@@ -26,7 +26,7 @@ private var isGPSEnabled = false
 
 
     init {
-        val m_Location: Location? = getLocation()
+      //  val m_Location: Location? = getLocation()
 
     }
 

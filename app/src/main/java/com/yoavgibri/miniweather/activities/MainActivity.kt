@@ -2,9 +2,9 @@ package com.yoavgibri.miniweather.activities
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.util.Log
 import com.yoavgibri.miniweather.*
 import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
@@ -15,9 +15,9 @@ import android.app.Activity
 import android.content.IntentSender
 import android.graphics.Color
 import android.os.Handler
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat.checkSelfPermission
-import android.support.v7.app.AlertDialog
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.yoavgibri.miniweather.R
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             return@setOnLongClickListener true
         }
 
-        registerToggle.setOnCheckedChangeListener{ _, isChecked ->registerToggleOnCheck(isChecked)}
+        registerToggle.setOnCheckedChangeListener { _, isChecked -> registerToggleOnCheck(isChecked) }
 
         //setImageFromText()
 
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
                 val locationSettingResponse = LocationHelper.checkLocationSettings(this)
 
-                locationSettingResponse.addOnSuccessListener { locationSettingsResponse ->
+                locationSettingResponse.addOnSuccessListener {
                     requestLastLocationAndSetNotifiction()
                     mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
                     alarmHelper.setRecurringAlarm()
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     AlertDialog.Builder(this).setTitle("Permissions").setMessage("Hi there.\nWe need those permission in order to get weather updates, and to keep errors log.\n" +
                             "You won't be able to use this app unless you approve all of the permission.")
-                            .setPositiveButton("go to permissions", { dialogInterface, i -> askForPermissions() })
+                            .setPositiveButton("go to permissions") { _, _ -> askForPermissions() }
                             .setOnDismissListener { registerToggle.isChecked = false }
                             .show()
                 }

@@ -20,8 +20,8 @@ public class LocationHelper {
     companion object {
 
         private val KEY_LOCATION_UPDATES_REQUESTED: String? = "location-updates-requested"
-        val KEY_LAST_KNOWN_LATITUDE: String? = "last_known_latitude"
-        val KEY_LAST_KNOWN_LONGITUDE: String? = "last_known_longitude"
+        internal const val KEY_LAST_KNOWN_LATITUDE: String = "last_known_latitude"
+        internal const val KEY_LAST_KNOWN_LONGITUDE: String = "last_known_longitude"
 
         fun setRequestingLocationUpdates(context: Context, requestUpdates: Boolean) {
             PreferenceManager.getDefaultSharedPreferences(context)
@@ -34,21 +34,19 @@ public class LocationHelper {
             return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY_LOCATION_UPDATES_REQUESTED, false)
         }
 
-        fun getLocationResultTitle(context: Context, locations: List<Location>): String {
+        private fun getLocationResultTitle(context: Context, locations: List<Location>): String {
             val numLocationsReported = context.resources.getQuantityString(R.plurals.num_locations_reported, locations.size, locations.size)
             return numLocationsReported + ": " + DateFormat.getDateTimeInstance().format(Date())
         }
 
 
-        private val KEY_LOCATION_UPDATES_RESULT: String? = "location-update-result"
+        private const val KEY_LOCATION_UPDATES_RESULT: String = "location-update-result"
         fun setLocationUpdatesResult(context: Context, locations: List<Location> ) {
-            PreferenceManager.getDefaultSharedPreferences(context)
-                    .edit().putString(KEY_LOCATION_UPDATES_RESULT, getLocationResultTitle(context, locations) + "\n" + getLocationResultText(context, locations)).apply()
+            SP.putString(KEY_LOCATION_UPDATES_RESULT, getLocationResultTitle(context, locations) + "\n" + getLocationResultText(context, locations))
         }
 
-        fun getLocationUpdatesResult(context: Context): String {
-            return PreferenceManager.getDefaultSharedPreferences(context)
-                    .getString(KEY_LOCATION_UPDATES_RESULT, "")
+        fun getLocationUpdatesResult(): String {
+            return SP.getString(KEY_LOCATION_UPDATES_RESULT, "")
         }
 
         private fun getLocationResultText(context: Context, locations: List<Location>): String {
@@ -67,9 +65,9 @@ public class LocationHelper {
             return sb.toString()
         }
 
-        val second : Long = 1000
-        val minute : Long = 60 * second
-        val hour : Long = 60 * minute
+        private const val second : Long = 1000
+        private const val minute : Long = 60 * second
+        private const val hour : Long = 60 * minute
 
         private val FASTEST_UPDATE_INTERVAL: Long =  30 * minute
         private val UPDATE_INTERVAL: Long = hour
