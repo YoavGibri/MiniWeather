@@ -15,7 +15,7 @@ import java.util.*
  * Created by Yoav on 09/12/17.
  */
 
-public class LocationHelper {
+class LocationHelper {
 
     companion object {
 
@@ -41,7 +41,7 @@ public class LocationHelper {
 
 
         private const val KEY_LOCATION_UPDATES_RESULT: String = "location-update-result"
-        fun setLocationUpdatesResult(context: Context, locations: List<Location> ) {
+        fun setLocationUpdatesResult(context: Context, locations: List<Location>) {
             SP.putString(KEY_LOCATION_UPDATES_RESULT, getLocationResultTitle(context, locations) + "\n" + getLocationResultText(context, locations))
         }
 
@@ -65,15 +65,15 @@ public class LocationHelper {
             return sb.toString()
         }
 
-        private const val second : Long = 1000
-        private const val minute : Long = 60 * second
-        private const val hour : Long = 60 * minute
+        private const val second: Long = 1000
+        private const val minute: Long = 60 * second
+        private const val hour: Long = 60 * minute
 
-        private val FASTEST_UPDATE_INTERVAL: Long =  30 * minute
+        private val FASTEST_UPDATE_INTERVAL: Long = 30 * minute
         private val UPDATE_INTERVAL: Long = hour
         private val MAX_WAIT_TIME: Long = 2 * hour
 
-        fun createLocationRequest() : LocationRequest {
+        fun createLocationRequest(): LocationRequest {
             return LocationRequest().apply {
                 priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
                 // Sets the desired interval for active location updates. This interval is

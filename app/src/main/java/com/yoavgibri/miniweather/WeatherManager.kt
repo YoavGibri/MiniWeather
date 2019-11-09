@@ -22,9 +22,9 @@ class WeatherManager(private var context: Context) {
     fun getCurrentWeatherJson(listener: OnWeatherLoad) {
         this.listener = listener
 
-        val unitsFormat = Do.getUnitFormat()
         val currentLat = SP.getFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, 0f).toDouble()
         val currentLong = SP.getFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, 0f).toDouble()
+        val unitsFormat = Do.getUnitFormat()
 
         val currentLatString = "%.4f".format(currentLat)
         val currentLongString = "%.4f".format(currentLong)

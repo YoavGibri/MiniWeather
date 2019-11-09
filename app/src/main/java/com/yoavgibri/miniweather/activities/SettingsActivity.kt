@@ -73,8 +73,8 @@ class SettingsActivity : AppCompatPreferenceActivity() {
 
 
             val timeFormatPreference = findPreference(getString(R.string.sp_key_time_format))
-            bindPreferenceSummaryToValue(timeFormatPreference)
             timeFormatPreference.setDefaultValue(if (DateFormat.is24HourFormat(context)) "24_hours" else "12_hours")
+            bindPreferenceSummaryToValue(timeFormatPreference)
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.sp_key_units_format)))
 
@@ -95,7 +95,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         }
 
 
-
         private fun sendFeedback(): Boolean {
             val address = arrayOf("yoavgibri@gmail.com")
             val intent = Intent(Intent.ACTION_SENDTO)
@@ -105,6 +104,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             if (intent.resolveActivity(context.packageManager) != null) {
                 startActivity(intent)
             }
+
             return true
         }
 
@@ -124,7 +124,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             if (preference is ListPreference) {
                 // For list preferences, look up the correct display value in the preference's 'entries' list.
                 val index = preference.findIndexOfValue(stringValue)
-
                 // Set the summary to reflect the new value.
                 preference.setSummary(
                         if (index >= 0)
@@ -133,7 +132,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
                             null)
 
             } else if (preference is NumberPickerPreference) {
-                AlarmManagerHelper(App.context).setRecurringAlarm(value as Int)
+                AlarmManagerHelper(App.context).setRecurringAlarm((value as Int).toLong())
                 preference.summary = "$stringValue Minutes"
 
 
@@ -182,6 +181,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         }
     }
 
-    enum class UnitSystem{metric, imperial}
-    enum class TimeFormat{hours_12, hours_24}
+    enum class UnitSystem { metric, imperial }
+    enum class TimeFormat { hours_12, hours_24 }
 }

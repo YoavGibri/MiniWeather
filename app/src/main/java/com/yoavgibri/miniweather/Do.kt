@@ -2,26 +2,20 @@ package com.yoavgibri.miniweather
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import android.widget.TextView
 import android.widget.Toast
 import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import android.graphics.Paint.Align
-import android.graphics.Paint.ANTI_ALIAS_FLAG
 import com.yoavgibri.miniweather.activities.SettingsActivity
 
 
@@ -46,20 +40,34 @@ class Do {
             stringBuffer.append(text ?: "null")
             stringBuffer.append("\n")
 
-            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED) {
-                if (file.exists()) {
-                    file.appendText(stringBuffer.toString())
-                } else {
-                    file.writeText(stringBuffer.toString())
-                }
-            }
 
+
+            if (SP.getBoolean(App.context.getString(R.string.pref_key_write_log), false)) {
+                Permissions.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context as Activity) {
+                    writeLog(file, stringBuffer.toString())
+                }
+//                if (Permissions.permissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                    if (file.exists()) {
+//                        file.appendText(stringBuffer.toString())
+//                    } else {
+//                        file.writeText(stringBuffer.toString())
+//                    }
+//                }
+            }
             if (showToast) {
                 Toast.makeText(context, text ?: "null", Toast.LENGTH_LONG).show()
             }
 
             Log.d("miniweather", text)
 
+        }
+
+        private fun writeLog(file: File, text: String) {
+            if (file.exists()) {
+                file.appendText(text)
+            } else {
+                file.writeText(text)
+            }
         }
 
         fun logError(text: String?, context: Context) {
@@ -148,7 +156,7 @@ class Do {
             editor.commit()
         }
 
-        fun getDefaultUnitSystem(): String {
+        private fun getDefaultUnitSystem(): String {
             val currentLocale = Locale.getDefault()
             //val unitSystem = App.context.resources.getStringArray(R.array.pref_degrees_unit_values)
 

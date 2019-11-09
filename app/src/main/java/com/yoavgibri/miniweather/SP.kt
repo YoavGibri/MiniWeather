@@ -27,6 +27,8 @@ class SP {
 
         fun putString(key: String, value: String) = edit().putString(key, value).commit()
 
+        fun getBoolean(key: String, defValue: Boolean) = pref().getBoolean(key, defValue)
+
 
     }
 }

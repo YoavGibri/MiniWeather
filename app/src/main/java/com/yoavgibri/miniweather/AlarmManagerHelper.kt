@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
-import android.preference.PreferenceManager
 import android.util.Log
 import com.yoavgibri.miniweather.broadcastReceivers.AlarmReceiver
 
@@ -33,12 +32,12 @@ class AlarmManagerHelper(val context: Context) {
 
     fun setRecurringAlarm() {
         val intervalMinutes : Int = SP.getInt(context.getString(R.string.sp_key_refresh_interval), context.resources.getInteger(R.integer.number_picker_default_value))
-        setRecurringAlarm(intervalMinutes)
+        setRecurringAlarm(intervalMinutes * intervalMultiplier)
     }
 
-    fun setRecurringAlarm(intervalMinutes : Int) {
-        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), intervalMinutes * intervalMultiplier, alarmIntent)
-        Log.d("AlarmMangerHelper", "Alarm set to every " + (intervalMinutes * intervalMultiplier) + " 1000s of a second")
+    fun setRecurringAlarm(intervalMilliSeconds : Long) {
+        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), intervalMilliSeconds, alarmIntent)
+        Log.d("AlarmMangerHelper", "Alarm set to every ${(intervalMilliSeconds / 1000)} seconds")
     }
 
     fun cancelAlarm() {

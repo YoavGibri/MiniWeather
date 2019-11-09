@@ -25,12 +25,6 @@ private var isGPSEnabled = false
     private var locationManager: LocationManager? = null
 
 
-    init {
-      //  val m_Location: Location? = getLocation()
-
-    }
-
-
     fun getLocation(): Location? {
         if (mContext.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 

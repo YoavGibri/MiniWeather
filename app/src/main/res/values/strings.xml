@@ -51,7 +51,7 @@
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
-    <string name="pref_title_degrees_unit">Degrees Unit</string>
+    <string name="pref_title_degrees_unit">Degrees unit</string>
     <string-array name="pref_degrees_unit_titles">
         <item>Celsius</item>
         <item>Fahrenheit</item>
@@ -63,7 +63,7 @@
         <item>Default</item>
     </string-array>
 
-    <string name="pref_title_time_format">Time Format</string>
+    <string name="pref_title_time_format">Time format</string>
     <string-array name="pref_time_format_titles">
         <item>12 Hours</item>
         <item>24 Hours</item>
@@ -93,5 +93,7 @@
     <string name="pref_title_refresh_interval">Refresh Interval</string>
     <string name="sp_key_refresh_interval">refresh interval</string>
     <string name="number_picker_default_value">30</string>
+    <string name="pref_key_write_log">write log</string>
+    <string name="pref_title_write_log">Write to log</string>
 
 </resources>
