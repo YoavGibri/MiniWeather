@@ -13,19 +13,20 @@ import android.Manifest.permission.*
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.IntentSender
-import android.graphics.Color
 import android.os.Handler
+import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.yoavgibri.miniweather.R
+import com.yoavgibri.miniweather.databinding.ActivityMainBinding
 import com.yoavgibri.miniweather.models.OpenWeather
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private val TAG = "MainActivity"
     private val REQUEST_CODE_SETTINGS = 5432
@@ -35,23 +36,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        versionTextView.text = "Ver. ${BuildConfig.VERSION_NAME}"
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.versionTextView.text = "Ver. ${BuildConfig.VERSION_NAME}"
 
         //askForPermissions()
         notificationManager = WeatherNotification(this)
 
-        buttonSettings.setOnClickListener {
+        binding.buttonSettings.setOnClickListener {
             startActivityForResult(Intent(this, SettingsActivity::class.java), REQUEST_CODE_SETTINGS)
         }
 
-        buttonSettings.setOnLongClickListener {
+        binding.buttonSettings.setOnLongClickListener {
             val devIntent = Intent(this, DevActivity::class.java)
             startActivity(devIntent)
             return@setOnLongClickListener true
         }
 
-        registerToggle.setOnCheckedChangeListener { _, isChecked -> registerToggleOnCheck(isChecked) }
+        binding.registerToggle.setOnCheckedChangeListener { _, isChecked -> registerToggleOnCheck(isChecked) }
 
         //setImageFromText()
 
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        Handler().postDelayed({ registerToggle.isChecked = Do.getIsRegisteredForLocationUpdates(this) }, 1000)
+        Handler().postDelayed({ binding.registerToggle.isChecked = Do.getIsRegisteredForLocationUpdates(this) }, 1000)
     }
 
 
@@ -158,14 +161,14 @@ class MainActivity : AppCompatActivity() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) {
                     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-                    if (registerToggle.isChecked) registerToggleOnCheck(true)
-                    else registerToggle.isChecked = true
+                    if (binding.registerToggle.isChecked) registerToggleOnCheck(true)
+                    else binding.registerToggle.isChecked = true
 
                 } else {
                     AlertDialog.Builder(this).setTitle("Permissions").setMessage("Hi there.\nWe need those permission in order to get weather updates, and to keep errors log.\n" +
                             "You won't be able to use this app unless you approve all of the permission.")
                             .setPositiveButton("go to permissions") { _, _ -> askForPermissions() }
-                            .setOnDismissListener { registerToggle.isChecked = false }
+                            .setOnDismissListener { binding.registerToggle.isChecked = false }
                             .show()
                 }
                 return
@@ -183,10 +186,10 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 requestLastLocationAndSetNotifiction()
             } else {
-                val snackbar: Snackbar = Snackbar.make(findViewById(R.id.rootLayout), getString(R.string.turn_on_location_message), Snackbar.LENGTH_INDEFINITE)
-                snackbar.setAction("TURN ON", { startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) })
-                snackbar.show()
-                registerToggle.isChecked = false
+                val snackBar: Snackbar = Snackbar.make(findViewById(R.id.rootLayout), getString(R.string.turn_on_location_message), Snackbar.LENGTH_INDEFINITE)
+                snackBar.setAction("TURN ON", View.OnClickListener { startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) })
+                snackBar.show()
+                binding.registerToggle.isChecked = false
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

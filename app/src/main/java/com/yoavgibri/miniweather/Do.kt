@@ -42,17 +42,10 @@ class Do {
 
 
 
-            if (SP.getBoolean(App.context.getString(R.string.pref_key_write_log), false)) {
+            if (SP.getBoolean(App.context.getString(R.string.pref_key_write_log), false) && context is Activity) {
                 Permissions.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context as Activity) {
                     writeLog(file, stringBuffer.toString())
                 }
-//                if (Permissions.permissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-//                    if (file.exists()) {
-//                        file.appendText(stringBuffer.toString())
-//                    } else {
-//                        file.writeText(stringBuffer.toString())
-//                    }
-//                }
             }
             if (showToast) {
                 Toast.makeText(context, text ?: "null", Toast.LENGTH_LONG).show()

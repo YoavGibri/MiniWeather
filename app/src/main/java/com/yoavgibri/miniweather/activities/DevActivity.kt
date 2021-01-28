@@ -5,13 +5,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yoavgibri.miniweather.*
 import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
+import com.yoavgibri.miniweather.databinding.ActivityDevBinding
 import com.yoavgibri.miniweather.models.OpenWeather
-import kotlinx.android.synthetic.main.activity_dev.*
 
 
 class DevActivity : AppCompatActivity() {
@@ -19,6 +19,7 @@ class DevActivity : AppCompatActivity() {
         val PERMISSIONS_REQUEST: Int = 12
     }
 
+    private lateinit var binding: ActivityDevBinding
     private var currentLocation: CurrentLatLong? = null
     private val notification: WeatherNotification get() = WeatherNotification(this)
     private var mFusedLocationClient: FusedLocationProviderClient? = null
@@ -26,6 +27,7 @@ class DevActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityDevBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_dev)
 
         initGps()
@@ -33,30 +35,30 @@ class DevActivity : AppCompatActivity() {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        buttonStop.setText(if (notification.isShowing()) R.string.stop else R.string.play)
+        binding.buttonStop.setText(if (notification.isShowing()) R.string.stop else R.string.play)
 
 
     }
 
 
     private fun initEvents() {
-        buttonStop.setOnClickListener {
+        binding.buttonStop.setOnClickListener {
             if (notification.isShowing()) {
                 notification.cancelNotification()
                 Do.logToFile("notification canceled!", this)
-                buttonStop.setText(R.string.play)
+                binding.buttonStop.setText(R.string.play)
             } else {
                 notification.show()
                 Do.logToFile("notification set!", this)
-                buttonStop.setText(R.string.stop)
+                binding.buttonStop.setText(R.string.stop)
             }
         }
 
-        walkingManButton.setOnClickListener {
+        binding.walkingManButton.setOnClickListener {
             notification.showIconOnly(R.drawable.animated_walking_man)
         }
 
-        weatherButton.setOnClickListener {
+        binding.weatherButton.setOnClickListener {
             WeatherManager(this).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
                 override fun onWeather(weather: OpenWeather) {
                     notification.updateWeather(weather)
@@ -64,24 +66,25 @@ class DevActivity : AppCompatActivity() {
             })
         }
 
-        weatherButton.setOnLongClickListener {
-            Crashlytics.getInstance().crash()
+        binding.weatherButton.setOnLongClickListener {
+
+
             true }
 
 
-        registerLocationUpdatesButton.setOnClickListener {
+        binding.registerLocationUpdatesButton.setOnClickListener {
             try {
 //                if (LocationHelper.getRequestingLocationUpdates(this)) {
                 if (notification.isShowing()) {
                     mFusedLocationClient?.removeLocationUpdates(getPendingIntent())
                     LocationHelper.setRequestingLocationUpdates(this, false)
                     Do.logToFile("Removing location updates", this)
-                    registerLocationUpdatesButton.text = getString(R.string.Reg_locations)
+                    binding.registerLocationUpdatesButton.text = getString(R.string.Reg_locations)
                 } else {
                     mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
                     LocationHelper.setRequestingLocationUpdates(this, true)
                     Do.logToFile("Starting location updates", this)
-                    registerLocationUpdatesButton.text = getString(R.string.un_Reg_locations)
+                    binding.registerLocationUpdatesButton.text = getString(R.string.un_Reg_locations)
                 }
 
             } catch (e: SecurityException) {
