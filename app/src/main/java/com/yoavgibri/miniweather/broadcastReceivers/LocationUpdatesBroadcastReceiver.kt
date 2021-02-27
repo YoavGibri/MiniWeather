@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 import com.yoavgibri.miniweather.*
-import com.yoavgibri.miniweather.models.OpenWeather
 import java.math.BigDecimal
 
 /**
@@ -50,7 +48,7 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
                     val currentLat = BigDecimal(location.latitude).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
                     val currentLong = BigDecimal(location.longitude).setScale(2, BigDecimal.ROUND_HALF_UP).toDouble()
 
-                    Do.saveLocationToSharedPreferences(context, currentLat, currentLong)
+                    Do.saveLocationToSharedPreferences(currentLat, currentLong)
                 } else {
                     Do.logError("LUBroadcastReceiver - onReceive - locations list is empty", context)
                 }

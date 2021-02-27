@@ -48,7 +48,7 @@ class BootReceiver : BroadcastReceiver() {
                     //  Save Last Location:
                     mFusedLocationClient.lastLocation?.addOnSuccessListener {
                         if (it != null) {
-                            Do.saveLocationToSharedPreferences(context, it.latitude, it.longitude)
+                            Do.saveLocationToSharedPreferences(it.latitude, it.longitude)
                         }
                     }
 
@@ -56,7 +56,7 @@ class BootReceiver : BroadcastReceiver() {
                     mFusedLocationClient.requestLocationUpdates(LocationHelper.createLocationRequest(), Do.getPendingIntent(context))
 
                     //  Get Weather and update notification:
-                    WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
+                    WeatherManager(context).getCurrentWeather(object : WeatherManager.OnWeatherLoad {
                         override fun onWeather(weather: OpenWeather) {
                             WeatherNotification(context).updateWeather(weather)
                         }

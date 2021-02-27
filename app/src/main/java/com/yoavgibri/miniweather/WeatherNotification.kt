@@ -114,7 +114,7 @@ class WeatherNotification(val context: Context) {
                     .setCustomContentView(notificationLayout)
                     .build()
 
-            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_ismiui), true)) {
+            if (SP.getBoolean(context.getString(R.string.pref_ismiui), true)) {
                 setMiuiCustomizationAllow(notification)
             }
 
@@ -150,7 +150,7 @@ class WeatherNotification(val context: Context) {
 
             field.set(notification, miuiNotification)
         } catch (e: Exception) {
-            PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(context.getString(R.string.pref_ismiui), false).apply()
+            SP.putBoolean(context.getString(R.string.pref_ismiui), false)
         }
     }
 

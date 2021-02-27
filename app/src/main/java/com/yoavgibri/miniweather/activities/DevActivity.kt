@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.yoavgibri.miniweather.*
 import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
 import com.yoavgibri.miniweather.databinding.ActivityDevBinding
@@ -59,7 +58,7 @@ class DevActivity : AppCompatActivity() {
         }
 
         binding.weatherButton.setOnClickListener {
-            WeatherManager(this).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
+            WeatherManager(this).getCurrentWeather(object : WeatherManager.OnWeatherLoad {
                 override fun onWeather(weather: OpenWeather) {
                     notification.updateWeather(weather)
                 }
@@ -135,7 +134,7 @@ class DevActivity : AppCompatActivity() {
         val status: Int? = currentLocation?.currentLatLong(this)
 
         if (status == 1) {
-            Do.saveLocationToSharedPreferences(this, currentLocation?.currentLat!!, currentLocation?.currentLong!!)
+            Do.saveLocationToSharedPreferences(currentLocation?.currentLat!!, currentLocation?.currentLong!!)
         }
 
     }

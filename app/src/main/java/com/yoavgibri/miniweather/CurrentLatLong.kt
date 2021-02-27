@@ -32,7 +32,7 @@ class CurrentLatLong {
             alert.setIcon(android.R.drawable.ic_dialog_alert)
             alert.setTitle("")
             alert.setMessage("Network_unAvailable")
-            alert.setPositiveButton("Ok") { dialog, which -> mcontext?.finish() }
+            alert.setPositiveButton("Ok") { _, _ -> mcontext?.finish() }
             alert.show()
         }
         return status
@@ -54,7 +54,7 @@ class CurrentLatLong {
         if (hasGpsOnDevice()) {
             if (isGpsEnabledOnDevice) {
                 try {
-                    val gpsTracker = GPSTracker(context)
+                    val gpsTracker = GPSManager(context)
                     currentLat = gpsTracker.getLocation()?.latitude!!
                     currentLong = gpsTracker.getLocation()?.longitude!!
 

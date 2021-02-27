@@ -10,7 +10,6 @@ import com.yoavgibri.miniweather.*
 import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastReceiver
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.Manifest.permission.*
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.IntentSender
 import android.os.Handler
@@ -28,11 +27,13 @@ import com.yoavgibri.miniweather.models.OpenWeather
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var mFusedLocationClient: FusedLocationProviderClient? = null
-    private val TAG = "MainActivity"
-    private val REQUEST_CODE_SETTINGS = 5432
-    private val REQUEST_CODE_CHECK_LOCATION_SETTINGS: Int = 433
     lateinit var notificationManager: WeatherNotification
 
+    companion object {
+        const val TAG = "MainActivity"
+        const val REQUEST_CODE_SETTINGS = 5432
+        const val REQUEST_CODE_CHECK_LOCATION_SETTINGS: Int = 433
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.versionTextView.text = "Ver. ${BuildConfig.VERSION_NAME}"
 
-        //askForPermissions()
         notificationManager = WeatherNotification(this)
 
         binding.buttonSettings.setOnClickListener {
@@ -51,23 +51,17 @@ class MainActivity : AppCompatActivity() {
         binding.buttonSettings.setOnLongClickListener {
             val devIntent = Intent(this, DevActivity::class.java)
             startActivity(devIntent)
-            return@setOnLongClickListener true
+            true
         }
 
         binding.registerToggle.setOnCheckedChangeListener { _, isChecked -> registerToggleOnCheck(isChecked) }
 
-        //setImageFromText()
+
+        
 
     }
 
 
-//    private fun setImageFromText(){
-//        val bitmap = Do.textAsBitmap("hello", 300f, Color.BLACK)
-//        testImage.setImageBitmap(bitmap)
-//    }
-
-
-    @SuppressLint("MissingPermission")
     private fun registerToggleOnCheck(isChecked: Boolean) {
         val alarmHelper = AlarmManagerHelper(this)
         if (isChecked) {
@@ -77,9 +71,11 @@ class MainActivity : AppCompatActivity() {
                 val locationSettingResponse = LocationHelper.checkLocationSettings(this)
 
                 locationSettingResponse.addOnSuccessListener {
-                    requestLastLocationAndSetNotifiction()
-                    mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
-                    alarmHelper.setRecurringAlarm()
+                    requestLastLocationAndSetNotification()
+                    Permissions.checkPermission(this@MainActivity, ACCESS_COARSE_LOCATION) {
+                        mFusedLocationClient?.requestLocationUpdates(LocationHelper.createLocationRequest(), getPendingIntent())
+                        alarmHelper.setRecurringAlarm()
+                    }
                 }
 
                 locationSettingResponse.addOnFailureListener { exception ->
@@ -109,15 +105,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestLastLocationAndSetNotifiction() {
+    private fun requestLastLocationAndSetNotification() {
         if (checkSelfPermission(ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
             mFusedLocationClient?.lastLocation?.addOnSuccessListener {
 
                 if (it != null) {
                     //  save last location to sharedPreferences:
-                    Do.saveLocationToSharedPreferences(this, it.latitude, it.longitude)
+                    Do.saveLocationToSharedPreferences(it.latitude, it.longitude)
                 }
-                WeatherManager(this).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
+                WeatherManager(this).getCurrentWeather(object : WeatherManager.OnWeatherLoad {
                     override fun onWeather(weather: OpenWeather) {
                         notificationManager.updateWeather(weather)
                     }
@@ -141,7 +137,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun askForPermissions(): Boolean {
-        val permissionsList = arrayOf(ACCESS_COARSE_LOCATION, ACCESS_NETWORK_STATE, WRITE_EXTERNAL_STORAGE, INTERNET)
+        val permissionsList = arrayOf(ACCESS_COARSE_LOCATION, ACCESS_NETWORK_STATE)
 
         return if (permissionsList.any { p -> checkSelfPermission(this, p) != PERMISSION_GRANTED }) {
             // need to request permissions
@@ -179,16 +175,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_SETTINGS) {
-            requestLastLocationAndSetNotifiction()
+            requestLastLocationAndSetNotification()
         }
 
         if (requestCode == REQUEST_CODE_CHECK_LOCATION_SETTINGS) {
             if (resultCode == Activity.RESULT_OK) {
-                requestLastLocationAndSetNotifiction()
+                requestLastLocationAndSetNotification()
             } else {
-                val snackBar: Snackbar = Snackbar.make(findViewById(R.id.rootLayout), getString(R.string.turn_on_location_message), Snackbar.LENGTH_INDEFINITE)
-                snackBar.setAction("TURN ON", View.OnClickListener { startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) })
-                snackBar.show()
+
+                Snackbar.make(findViewById(R.id.rootLayout), getString(R.string.turn_on_location_message), Snackbar.LENGTH_INDEFINITE).apply {
+                    setAction("TURN ON", View.OnClickListener { startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) })
+                    show()
+                }
+
                 binding.registerToggle.isChecked = false
             }
         }

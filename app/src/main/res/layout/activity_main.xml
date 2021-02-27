@@ -65,13 +65,14 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
                 android:typeface="monospace" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/registerToggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@color/white"
                 android:elevation="10dp"
+                android:checked="true"
                 android:padding="10dp"
                 android:text="@string/activate_weather_notification_icon"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />

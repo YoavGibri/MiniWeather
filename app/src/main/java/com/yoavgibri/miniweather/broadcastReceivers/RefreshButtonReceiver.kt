@@ -1,15 +1,10 @@
 package com.yoavgibri.miniweather.broadcastReceivers
 
 import android.annotation.SuppressLint
-import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import android.widget.Toast
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnCompleteListener
 import com.yoavgibri.miniweather.*
 import com.yoavgibri.miniweather.models.OpenWeather
 
@@ -44,19 +39,19 @@ class RefreshButtonReceiver : BroadcastReceiver() {
                 }
             }
 
-            fusedLocationClient?.lastLocation?.addOnSuccessListener {
+            fusedLocationClient.lastLocation.addOnSuccessListener {
                 Do.logToFile("RefreshButtonReceiver - OnReceive - LastLocation OnSuccess", context)
                 if (it != null) {
-                    Do.saveLocationToSharedPreferences(context, it.latitude, it.longitude)
+                    Do.saveLocationToSharedPreferences(it.latitude, it.longitude)
                 } else {
                     Do.logError("RefreshButtonReceiver - OnReceive - LastLocation OnSuccess - it is null", context)
                 }
-                WeatherManager(context).getCurrentWeatherJson(onWeather)
+                WeatherManager(context).getCurrentWeather(onWeather)
             }
 
-            fusedLocationClient?.lastLocation?.addOnFailureListener {
+            fusedLocationClient.lastLocation.addOnFailureListener {
                 Do.logError(it.message, context)
-                WeatherManager(context).getCurrentWeatherJson(onWeather)
+                WeatherManager(context).getCurrentWeather(onWeather)
             }
         }
 

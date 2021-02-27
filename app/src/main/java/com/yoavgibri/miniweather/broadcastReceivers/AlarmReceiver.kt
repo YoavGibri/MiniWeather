@@ -13,12 +13,13 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Do.logToFile("AlarmReceiver - onReceive", context)
 
-        WeatherManager(context).getCurrentWeatherJson(object : WeatherManager.OnWeatherLoad {
+        WeatherManager(context).getCurrentWeather(object : WeatherManager.OnWeatherLoad {
             override fun onWeather(weather: OpenWeather) {
                 Do.logToFile("AlarmReceiver - onWeather", context)
+
                 val notification = WeatherNotification(context)
-//                notification.cancelNotification()
                 notification.updateWeather(weather)
+
             }
         })
     }

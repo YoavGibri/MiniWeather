@@ -23,11 +23,15 @@ class SP {
 
         fun getFloat(key: String) = getFloat(key, 0f)
 
+        fun getBoolean(key: String, defValue: Boolean) = pref().getBoolean(key, defValue)
 
 
         fun putString(key: String, value: String) = edit().putString(key, value).commit()
 
-        fun getBoolean(key: String, defValue: Boolean) = pref().getBoolean(key, defValue)
+        fun putBoolean(key: String, value: Boolean) = edit().putBoolean(key, value).commit()
+
+        fun putFloat(key: String, value: Float) = edit().putFloat(key, value).commit()
+
 
 
     }

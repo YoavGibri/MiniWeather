@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Environment
-import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
@@ -17,6 +16,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import com.yoavgibri.miniweather.activities.SettingsActivity
+import timber.log.Timber
 
 
 /**
@@ -26,7 +26,7 @@ class Do {
     @SuppressLint("SimpleDateFormat")
 
     companion object {
-        fun logToFile(text: String?, context: Context, showToast: Boolean = false) {
+        fun logToFile(text: String, context: Context, showToast: Boolean = false) {
 
             val file = File("${Environment.getExternalStorageDirectory()}/WeatherNotificationsLog.txt")
             if (file.exists() && file.length() > 100000) {
@@ -37,21 +37,21 @@ class Do {
 
             val stringBuffer = StringBuffer()
             stringBuffer.append("$date - ")
-            stringBuffer.append(text ?: "null")
+            stringBuffer.append(text)
             stringBuffer.append("\n")
 
 
 
             if (SP.getBoolean(App.context.getString(R.string.pref_key_write_log), false) && context is Activity) {
-                Permissions.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context as Activity) {
+                Permissions.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) {
                     writeLog(file, stringBuffer.toString())
                 }
             }
             if (showToast) {
-                Toast.makeText(context, text ?: "null", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, text, Toast.LENGTH_LONG).show()
             }
 
-            Log.d("miniweather", text)
+            Timber.d(text)
 
         }
 
@@ -85,11 +85,11 @@ class Do {
         }
 
         fun getIsRegisteredForLocationUpdates(context: Context): Boolean {
-            return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_register_for_updates), false)
+            return SP.getBoolean(context.getString(R.string.key_register_for_updates), false)
         }
 
         fun setIsRegisteredForLocationUpdates(context: Context, isRegistered: Boolean) {
-            return PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(context.getString(R.string.key_register_for_updates), isRegistered).apply()
+            SP.putBoolean(context.getString(R.string.key_register_for_updates), isRegistered)
         }
 
         fun getResIconByIconName(iconName: String?): Int {
@@ -140,18 +140,13 @@ class Do {
             notificationLayout.setViewVisibility(R.id.animationLightning, View.GONE)
         }
 
-        @SuppressLint("ApplySharedPref")
-        fun saveLocationToSharedPreferences(context: Context, latitude: Double, longitude: Double) {
-            val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            val editor = sp.edit()
-            editor.putFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, latitude.toFloat())
-            editor.putFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, longitude.toFloat())
-            editor.commit()
+        fun saveLocationToSharedPreferences(latitude: Double, longitude: Double) {
+            SP.putFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, latitude.toFloat())
+            SP.putFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, longitude.toFloat())
         }
 
         private fun getDefaultUnitSystem(): String {
             val currentLocale = Locale.getDefault()
-            //val unitSystem = App.context.resources.getStringArray(R.array.pref_degrees_unit_values)
 
             return when (currentLocale.country.toUpperCase(currentLocale)) {
                 // UK, UK, Myanmar, Liberia,
@@ -172,44 +167,6 @@ class Do {
         }
 
         fun getUnitFormat(): String = SP.getString(App.context.getString(R.string.sp_key_units_format), getDefaultUnitSystem())
-
-
-//        fun getimageFromText(context: Context, text: String): Bitmap {
-//            val textView = TextView(context)
-//            textView.text = text
-//            textView.isDrawingCacheEnabled = true
-//            textView.destroyDrawingCache()
-//            textView.buildDrawingCache()
-//
-//            val drawingCache = textView.drawingCache
-//            val width = drawingCache.width
-//            val height = drawingCache.height
-//            val copy: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//            val pixels = intArrayOf(width * height)
-//            drawingCache.getPixels(pixels, 0, width, 0, 0, width, height)
-//            copy.setPixels(pixels, 0, width, 0, 0, width, height)
-//            return copy
-//        }
-//
-//        fun textAsBitmap(text: String, textSize: Float, textColor: Int): Bitmap {
-//            // adapted from https://stackoverflow.com/a/8799344/1476989
-//            val paint = Paint(ANTI_ALIAS_FLAG)
-//            paint.textSize = textSize
-//            paint.color = textColor
-//            paint.textAlign = Align.LEFT
-//            val baseline = -paint.ascent() // ascent() is negative
-//            var width = (paint.measureText(text) + 0.0f).toInt() // round
-//            var height = (baseline + paint.descent() + 0.0f).toInt()
-//
-//            val trueWidth = width
-//            if (width > height) height = width else width = height
-//            val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//
-//            val canvas = Canvas(image)
-//            canvas.drawText(text, width / 2f - trueWidth / 2f, baseline, paint)
-//            return image
-//        }
-
 
     }
 }
