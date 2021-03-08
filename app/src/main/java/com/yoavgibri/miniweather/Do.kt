@@ -16,6 +16,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import com.yoavgibri.miniweather.activities.SettingsActivity
+import com.yoavgibri.miniweather.managers.SettingsManager
 import timber.log.Timber
 
 
@@ -145,20 +146,10 @@ class Do {
             SP.putFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, longitude.toFloat())
         }
 
-        private fun getDefaultUnitSystem(): String {
-            val currentLocale = Locale.getDefault()
 
-            return when (currentLocale.country.toUpperCase(currentLocale)) {
-                // UK, UK, Myanmar, Liberia,
-                "US", "GB", "MM", "LR" -> SettingsActivity.UnitSystem.imperial.toString()
-                else -> SettingsActivity.UnitSystem.metric.toString()
-
-            }
-
-        }
 
         fun getDegreesSymbol(): String {
-            return when (getUnitFormat()) {
+            return when (SettingsManager.getUnitFormat()) {
                 "Metric" -> "°C"
                 "Imperial" -> "°F"
                 "Default" -> "K"
@@ -166,7 +157,6 @@ class Do {
             }
         }
 
-        fun getUnitFormat(): String = SP.getString(App.context.getString(R.string.sp_key_units_format), getDefaultUnitSystem())
 
     }
 }

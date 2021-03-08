@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import android.preference.PreferenceManager
 import android.util.Log
 import com.google.gson.Gson
+import com.yoavgibri.miniweather.managers.SettingsManager
 import com.yoavgibri.miniweather.models.OpenWeather
 import com.yoavgibri.miniweather.network.NetworkManager
 import com.yoavgibri.miniweather.network.WeatherRequest
@@ -30,7 +31,7 @@ class WeatherManager(private var context: Context) {
 
         val currentLat = SP.getFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, 0f).toDouble()
         val currentLong = SP.getFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, 0f).toDouble()
-        val unitsFormat = Do.getUnitFormat()
+        val unitsFormat = SettingsManager.getUnitFormat()
 
         val currentLatString = "%.4f".format(currentLat)
         val currentLongString = "%.4f".format(currentLong)

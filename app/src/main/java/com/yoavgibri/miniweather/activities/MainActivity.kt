@@ -11,8 +11,10 @@ import com.yoavgibri.miniweather.broadcastReceivers.LocationUpdatesBroadcastRece
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.Manifest.permission.*
 import android.app.Activity
+import android.content.Context
 import android.content.IntentSender
 import android.os.Handler
+import android.text.format.DateFormat
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.content.ContextCompat.checkSelfPermission
@@ -21,7 +23,9 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.yoavgibri.miniweather.R
 import com.yoavgibri.miniweather.databinding.ActivityMainBinding
+import com.yoavgibri.miniweather.managers.SettingsManager
 import com.yoavgibri.miniweather.models.OpenWeather
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,28 +41,30 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        SettingsManager.checkDefaultSettings()
 
-        binding.versionTextView.text = "Ver. ${BuildConfig.VERSION_NAME}"
+        binding = ActivityMainBinding.inflate(layoutInflater).apply {
+
+            setContentView(root)
+
+            versionTextView.text = "Ver. ${BuildConfig.VERSION_NAME}"
+
+            buttonSettings.setOnClickListener {
+                startActivityForResult(Intent(this@MainActivity, SettingsActivity::class.java), REQUEST_CODE_SETTINGS)
+            }
+
+            buttonSettings.setOnLongClickListener {
+                val devIntent = Intent(this@MainActivity, DevActivity::class.java)
+                startActivity(devIntent)
+                true
+            }
+
+
+            registerToggle.setOnCheckedChangeListener { _, isChecked -> registerToggleOnCheck(isChecked) }
+
+        }
 
         notificationManager = WeatherNotification(this)
-
-        binding.buttonSettings.setOnClickListener {
-            startActivityForResult(Intent(this, SettingsActivity::class.java), REQUEST_CODE_SETTINGS)
-        }
-
-        binding.buttonSettings.setOnLongClickListener {
-            val devIntent = Intent(this, DevActivity::class.java)
-            startActivity(devIntent)
-            true
-        }
-
-        binding.registerToggle.setOnCheckedChangeListener { _, isChecked -> registerToggleOnCheck(isChecked) }
-
-
-        
-
     }
 
 
@@ -129,7 +135,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getPendingIntent(): PendingIntent? {
+    private fun getPendingIntent(): PendingIntent {
         val intent = Intent(this, LocationUpdatesBroadcastReceiver::class.java)
         //intent.action = LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES
         return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)

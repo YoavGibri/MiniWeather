@@ -9,6 +9,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.yoavgibri.miniweather.activities.DevActivity
+import timber.log.Timber
 
 /**
  * Created by Yoav on 10/12/17.
@@ -52,7 +53,6 @@ private var isGPSEnabled = false
                             Log.d("GPS", "GPS Enabled")
                             if (locationManager != null) {
                                 location = locationManager!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
                                 Log.d("location", location!!.toString() + "")
                                 if (location != null) {
                                     latitude = location!!.latitude

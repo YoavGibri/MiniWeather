@@ -10,10 +10,8 @@ import android.os.Bundle
 import android.preference.*
 import android.view.MenuItem
 import androidx.core.app.NavUtils
-import android.text.format.DateFormat
-import com.yoavgibri.miniweather.AlarmManagerHelper
-import com.yoavgibri.miniweather.App
-import com.yoavgibri.miniweather.R
+import com.yoavgibri.miniweather.*
+import com.yoavgibri.miniweather.managers.SettingsManager
 import com.yoavgibri.miniweather.views.NumberPickerPreference
 import java.lang.ClassCastException
 
@@ -28,6 +26,7 @@ import java.lang.ClassCastException
  * for more information on developing a Settings UI.
  */
 class SettingsActivity : AppCompatPreferenceActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,15 +71,17 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             setHasOptionsMenu(true)
 
 
-            val timeFormatPreference = findPreference(getString(R.string.sp_key_time_format))
-            timeFormatPreference.setDefaultValue(if (DateFormat.is24HourFormat(context)) "24_hours" else "12_hours")
+            val timeFormatPreference = findPreference(getString(R.string.sp_key_time_format)) as ListPreference
             bindPreferenceSummaryToValue(timeFormatPreference)
+           // timeFormatPreference.setValue(SettingsManager.getTimeFormat())
 
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.sp_key_units_format)))
+            val unitFormatPreference = findPreference(getString(R.string.sp_key_units_format)) as ListPreference
+            bindPreferenceSummaryToValue(unitFormatPreference)
+           // unitFormatPreference.setValue(SettingsManager.getUnitFormat())
 
-            val refreshIntervalPreference = findPreference(getString(R.string.sp_key_refresh_interval))
-            refreshIntervalPreference.setDefaultValue("30")
+            val refreshIntervalPreference = findPreference(getString(R.string.sp_key_refresh_interval)) as NumberPickerPreference
             bindPreferenceSummaryToValue(refreshIntervalPreference)
+           // refreshIntervalPreference.setValue(SettingsManager.getIntervalsMinutes())
 
             findPreference(getString(R.string.pref_key_send_feedback)).setOnPreferenceClickListener { sendFeedback() }
         }
@@ -121,25 +122,29 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         private val sBindPreferenceSummaryToValueListener = Preference.OnPreferenceChangeListener { preference, value ->
             val stringValue = value.toString()
 
-            if (preference is ListPreference) {
-                // For list preferences, look up the correct display value in the preference's 'entries' list.
-                val index = preference.findIndexOfValue(stringValue)
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        if (index >= 0)
-                            preference.entries[index]
-                        else
-                            null)
+            when (preference) {
+                is ListPreference -> {
+                    // For list preferences, look up the correct display value in the preference's 'entries' list.
+                    val index = preference.findIndexOfValue(stringValue)
+                    // Set the summary to reflect the new value.
+                    preference.setSummary(
+                            if (index >= 0)
+                                preference.entries[index]
+                            else
+                                null)
+                }
 
-            } else if (preference is NumberPickerPreference) {
-                AlarmManagerHelper(App.context).setRecurringAlarm((value as Int).toLong())
-                preference.summary = "$stringValue Minutes"
+                is NumberPickerPreference -> {
+                    AlarmManagerHelper(App.context).setRecurringAlarm(stringValue.toLong())
+                    preference.summary = "$stringValue Minutes"
 
 
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.summary = stringValue
+                }
+                else -> {
+                    // For all other preferences, set the summary to the value's
+                    // simple string representation.
+                    preference.summary = stringValue
+                }
             }
             true
         }
@@ -168,19 +173,12 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             // Trigger the listener immediately with the preference's
             // current value.
             try {
-                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                        PreferenceManager
-                                .getDefaultSharedPreferences(preference.context)
-                                .getString(preference.key, ""))
+                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, SettingsManager.pref.getString(preference.key, ""))
             } catch (e: ClassCastException) {
-                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                        PreferenceManager
-                                .getDefaultSharedPreferences(preference.context)
-                                .getInt(preference.key, 0))
+                sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, SettingsManager.pref.getInt(preference.key, 0))
             }
         }
     }
 
-    enum class UnitSystem { metric, imperial }
-    enum class TimeFormat { hours_12, hours_24 }
+
 }

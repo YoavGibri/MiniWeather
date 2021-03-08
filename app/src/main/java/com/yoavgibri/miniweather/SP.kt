@@ -1,11 +1,15 @@
 package com.yoavgibri.miniweather
 
-import android.preference.PreferenceManager
+import android.content.Context
+import android.content.SharedPreferences
 
 class SP {
 
     companion object {
-        private fun pref() = PreferenceManager.getDefaultSharedPreferences(App.context)
+        private fun pref(): SharedPreferences {
+            return App.context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
+        }
+
         private fun edit() = pref().edit()
 
 
@@ -31,7 +35,6 @@ class SP {
         fun putBoolean(key: String, value: Boolean) = edit().putBoolean(key, value).commit()
 
         fun putFloat(key: String, value: Float) = edit().putFloat(key, value).commit()
-
 
 
     }

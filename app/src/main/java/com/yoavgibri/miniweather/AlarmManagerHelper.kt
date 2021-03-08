@@ -7,6 +7,8 @@ import android.content.Intent
 import android.os.SystemClock
 import android.util.Log
 import com.yoavgibri.miniweather.broadcastReceivers.AlarmReceiver
+import com.yoavgibri.miniweather.managers.SettingsManager
+import timber.log.Timber
 
 class AlarmManagerHelper(val context: Context) {
     companion object {
@@ -31,13 +33,13 @@ class AlarmManagerHelper(val context: Context) {
     private val intervalMultiplier: Long = 60 * 1000
 
     fun setRecurringAlarm() {
-        val intervalMinutes : Int = SP.getInt(context.getString(R.string.sp_key_refresh_interval), context.resources.getInteger(R.integer.number_picker_default_value))
+        val intervalMinutes : Int = SettingsManager.getIntervalsMinutes()
         setRecurringAlarm(intervalMinutes * intervalMultiplier)
     }
 
     fun setRecurringAlarm(intervalMilliSeconds : Long) {
         alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), intervalMilliSeconds, alarmIntent)
-        Log.d("AlarmMangerHelper", "Alarm set to every ${(intervalMilliSeconds / 1000)} seconds")
+        Timber.d( "Alarm set to every ${(intervalMilliSeconds / 1000)} seconds")
     }
 
     fun cancelAlarm() {

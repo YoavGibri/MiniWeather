@@ -19,6 +19,7 @@ import android.widget.RemoteViews
 import com.yoavgibri.miniweather.activities.MainActivity
 import com.yoavgibri.miniweather.activities.SettingsActivity
 import com.yoavgibri.miniweather.broadcastReceivers.RefreshButtonReceiver
+import com.yoavgibri.miniweather.managers.SettingsManager
 import com.yoavgibri.miniweather.models.OpenWeather
 import java.text.SimpleDateFormat
 import java.util.*
@@ -129,9 +130,8 @@ class WeatherNotification(val context: Context) {
     }
 
     private fun getCurrentTimeString(): String? {
-        val defFormatValue = if (DateFormat.is24HourFormat(context)) SettingsActivity.TimeFormat.hours_24 else SettingsActivity.TimeFormat.hours_12
-        val timeFormat = SP.getString(context.getString(R.string.sp_key_time_format), defFormatValue.toString())
-        val pattern = if (timeFormat == SettingsActivity.TimeFormat.hours_24.toString()) "HH:mm" else "hh:mm a"
+        val timeFormat = SettingsManager.getTimeFormat()
+        val pattern = if (timeFormat == SettingsManager.HOURS_24) "HH:mm" else "hh:mm a"
         return SimpleDateFormat(pattern, Locale.getDefault()).format(Calendar.getInstance().time)
     }
 

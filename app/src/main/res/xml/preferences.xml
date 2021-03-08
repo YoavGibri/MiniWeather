@@ -4,8 +4,6 @@
          dismiss it. -->
     <!-- NOTE: ListPreference'pattern summary should be set to its value by the activity code. -->
     <ListPreference
-        android:defaultValue="Metric"
-
         android:entries="@array/pref_degrees_unit_titles"
         android:entryValues="@array/pref_degrees_unit_values"
         android:key="@string/sp_key_units_format"
@@ -23,9 +21,7 @@
 
     <com.yoavgibri.miniweather.views.NumberPickerPreference
         android:key="@string/sp_key_refresh_interval"
-        android:title="@string/pref_title_refresh_interval"
-        android:defaultValue="@integer/number_picker_default_value"
-        />
+        android:title="@string/pref_title_refresh_interval" />
 
     <Preference
         android:key="@string/pref_key_send_feedback"
@@ -33,8 +29,7 @@
 
     <SwitchPreference
         android:key="@string/pref_key_write_log"
-        android:title="@string/pref_title_write_log"
-        />
+        android:title="@string/pref_title_write_log" />
 
 
     <!-- This preference simply launches an intent when selected. Use this UI sparingly, per
