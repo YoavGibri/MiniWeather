@@ -32,12 +32,11 @@ class RefreshButtonReceiver : BroadcastReceiver() {
         fun doOnReceive(context: Context) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-            val onWeather: WeatherManager.OnWeatherLoad = object : WeatherManager.OnWeatherLoad {
-                override fun onWeather(weather: OpenWeather) {
-                    val notificationManager = WeatherNotification(context)
-                    notificationManager.updateWeather(weather)
-                }
+            val onWeather = fun(weather: OpenWeather) {
+                val notificationManager = WeatherNotification(context)
+                notificationManager.updateWeather(weather)
             }
+
 
             fusedLocationClient.lastLocation.addOnSuccessListener {
                 Do.logToFile("RefreshButtonReceiver - OnReceive - LastLocation OnSuccess", context)

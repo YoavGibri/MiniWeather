@@ -58,17 +58,16 @@ class DevActivity : AppCompatActivity() {
         }
 
         binding.weatherButton.setOnClickListener {
-            WeatherManager(this).getCurrentWeather(object : WeatherManager.OnWeatherLoad {
-                override fun onWeather(weather: OpenWeather) {
-                    notification.updateWeather(weather)
-                }
-            })
+            WeatherManager(this).getCurrentWeather { weather ->
+                notification.updateWeather(weather)
+            }
         }
 
         binding.weatherButton.setOnLongClickListener {
 
 
-            true }
+            true
+        }
 
 
         binding.registerLocationUpdatesButton.setOnClickListener {

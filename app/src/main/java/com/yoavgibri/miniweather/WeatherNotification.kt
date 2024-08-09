@@ -50,13 +50,20 @@ class WeatherNotification(val context: Context) {
 
 
         return NotificationCompat.Builder(context, channelID)
-                .setAutoCancel(false)
-                .setOngoing(true)
-                .setCustomContentView(notificationLayout)
-                .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
-                .setTicker("")
-                .setChannelId(channelID)
-                .setVisibility(VISIBILITY_SECRET)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setCustomContentView(notificationLayout)
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    context,
+                    0,
+                    Intent(context, MainActivity::class.java),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            )
+            .setTicker("")
+            .setChannelId(channelID)
+            .setVisibility(VISIBILITY_SECRET)
 
     }
 
@@ -95,25 +102,27 @@ class WeatherNotification(val context: Context) {
             val animationViewId = Do.getProgressBarViewIdByIconName(iconName)
             if (iconRes == -1) throw Exception("LUBroadcastReceiver - onWeather - resIcon is -1")
 
-
             Do.hideAllAnimations(notificationLayout)
-            notificationLayout.setTextViewText(R.id.textViewCity, city)
-            notificationLayout.setTextViewText(R.id.textViewTemperature, temp.toString() + Do.getDegreesSymbol())
-            notificationLayout.setTextViewText(R.id.textViewDescription, description)
-            notificationLayout.setTextViewText(R.id.textViewLastUpdate, currentTime)
-            notificationLayout.setViewVisibility(animationViewId, View.VISIBLE)
-            notificationLayout.setProgressBar(animationViewId, 2, 1, true)
 
+            notificationLayout.apply {
+                setTextViewText(R.id.textViewCity, city)
+                setTextViewText(R.id.textViewTemperature, temp.toString() + Do.getDegreesSymbol())
+                setTextViewText(R.id.textViewDescription, description)
+                setTextViewText(R.id.textViewLastUpdate, currentTime)
+                setViewVisibility(animationViewId, View.VISIBLE)
+                setProgressBar(animationViewId, 2, 1, true)
+            }
 
-            val updateWeatherIntent: PendingIntent = PendingIntent.getBroadcast(context, 420, Intent(context, RefreshButtonReceiver::class.java), 0)
+            val updateWeatherIntent: PendingIntent =
+                PendingIntent.getBroadcast(context, 420, Intent(context, RefreshButtonReceiver::class.java), 0)
             notificationLayout.setOnClickPendingIntent(R.id.buttonRefresh, updateWeatherIntent)
 
 
             val notification: Notification = builder
-                    .setSmallIcon(iconRes)
-                    //.setLargeIcon(Do.textAsBitmap("11", 100f, Color.WHITE)) //does not work
-                    .setCustomContentView(notificationLayout)
-                    .build()
+                .setSmallIcon(iconRes)
+                //.setLargeIcon(Do.textAsBitmap("11", 100f, Color.WHITE)) //does not work
+                .setCustomContentView(notificationLayout)
+                .build()
 
             if (SP.getBoolean(context.getString(R.string.pref_ismiui), true)) {
                 setMiuiCustomizationAllow(notification)
@@ -157,7 +166,7 @@ class WeatherNotification(val context: Context) {
 
     fun showIconOnly(icon: Int) {
         builder.setSmallIcon(icon)
-                .setContentTitle("")
+            .setContentTitle("")
         notificationManager.notify(STATUS_NOTIFICATION_ID, builder.build())
     }
 

@@ -41,7 +41,7 @@ class SettingsManager {
         fun getUnitFormat(): String = pref.getString(App.context.getString(R.string.sp_key_units_format), getDefaultUnitSystem())!!
         fun getTimeFormat(): String = pref.getString(App.context.getString(R.string.sp_key_time_format), HOURS_12)!!
         fun getIntervalsMinutes(): Int = pref.getInt(App.context.getString(R.string.sp_key_refresh_interval), 30)
-        fun getIsRegistered
+//        fun getIsRegistered
 
         private fun getDefaultUnitSystem(): String {
             val currentLocale = Locale.getDefault()

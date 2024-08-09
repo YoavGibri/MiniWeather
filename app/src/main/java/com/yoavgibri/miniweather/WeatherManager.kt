@@ -23,11 +23,8 @@ import java.net.URL
  */
 
 class WeatherManager(private var context: Context) {
-    lateinit var listener: OnWeatherLoad
 
-
-    fun getCurrentWeather(listener: OnWeatherLoad) {
-        this.listener = listener
+    fun getCurrentWeather(onSuccess: (weather: OpenWeather) -> Unit) {
 
         val currentLat = SP.getFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, 0f).toDouble()
         val currentLong = SP.getFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, 0f).toDouble()
@@ -40,11 +37,14 @@ class WeatherManager(private var context: Context) {
 
         NetworkManager(context).getWeatherFromServer(weatherRequest, object : NetworkManager.OnResponse {
             override fun onResponse(weatherResponse: OpenWeather) {
-                listener.onWeather(weatherResponse)
+                onSuccess.invoke(weatherResponse)
             }
         })
 
-        Do.logToFile("WeatherManager - getCurrentWeatherJson, waiting for OnWeather - Lat,Long: $currentLatString,$currentLongString", context)
+        Do.logToFile(
+            "WeatherManager - getCurrentWeatherJson, waiting for OnWeather - Lat,Long: $currentLatString,$currentLongString",
+            context
+        )
     }
 
 //    private fun getWeatherFromServer(unitsFormat: String, currentLatString: String, currentLongString: String) {
@@ -68,8 +68,5 @@ class WeatherManager(private var context: Context) {
 //    }
 
 
-    interface OnWeatherLoad {
-        fun onWeather(weather: OpenWeather)
-    }
 
 }

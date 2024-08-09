@@ -94,41 +94,39 @@ class Do {
         }
 
         fun getResIconByIconName(iconName: String?): Int {
-            var resIcon1 = -1
-            when (iconName) {
-                "01d" -> resIcon1 = R.drawable.animated_sun              //clear sky day
-                "01n" -> resIcon1 = R.drawable.animated_moon              //clear sky night
-                "02d" -> resIcon1 = R.drawable.animated_cloudy           //few clouds day
-                "02n" -> resIcon1 = R.drawable.animated_cloudy_night           //few clouds night
-                "03d", "03n" -> resIcon1 = R.drawable.animated_clouds    //scattered clouds
-                "04d", "04n" -> resIcon1 = R.drawable.animated_clouds    //broken clouds
-                "09d", "09n" -> resIcon1 = R.drawable.animated_rain      //shower rain
-                "10d" -> resIcon1 = R.drawable.animated_rain             //rain day
-                "10n" -> resIcon1 = R.drawable.animated_rain             //rain night
-                "11d", "11n" -> resIcon1 = R.drawable.animated_lightning  //thunderstorm
-                "13d", "13n" -> resIcon1 = R.drawable.animated_cloudy    //snow
-                "50d", "50n" -> resIcon1 = R.drawable.animated_clouds    //mist
+            return when (iconName) {
+                "01d" -> R.drawable.animated_sun              //clear sky day
+                "01n" -> R.drawable.animated_moon              //clear sky night
+                "02d" -> R.drawable.animated_cloudy           //few clouds day
+                "02n" -> R.drawable.animated_cloudy_night           //few clouds night
+                "03d", "03n" -> R.drawable.animated_clouds    //scattered clouds
+                "04d", "04n" -> R.drawable.animated_clouds    //broken clouds
+                "09d", "09n" -> R.drawable.animated_rain      //shower rain
+                "10d" -> R.drawable.animated_rain             //rain day
+                "10n" -> R.drawable.animated_rain             //rain night
+                "11d", "11n" -> R.drawable.animated_lightning  //thunderstorm
+                "13d", "13n" -> R.drawable.animated_cloudy    //snow
+                "50d", "50n" -> R.drawable.animated_clouds    //mist
+                else -> -1
             }
-            return resIcon1
         }
 
         fun getProgressBarViewIdByIconName(iconName: String?): Int {
-            var viewId = -1
-            when (iconName) {
-                "01d" -> viewId = R.id.animationSun              //clear sky day
-                "01n" -> viewId = R.id.animationMoon              //clear sky night
-                "02d" -> viewId = R.id.animationCloudy           //few clouds day
-                "02n" -> viewId = R.id.animationCloudyNight           //few clouds night
-                "03d", "03n" -> viewId = R.id.animationClouds    //scattered clouds
-                "04d", "04n" -> viewId = R.id.animationClouds    //broken clouds
-                "09d", "09n" -> viewId = R.id.animationRain      //shower rain
-                "10d" -> viewId = R.id.animationRain             //rain day
-                "10n" -> viewId = R.id.animationRain             //rain night
-                "11d", "11n" -> viewId = R.id.animationLightning  //thunderstorm
-                "13d", "13n" -> viewId = R.id.animationCloudy    //snow
-                "50d", "50n" -> viewId = R.id.animationClouds    //mist
+            return when (iconName) {
+                "01d" -> R.id.animationSun              //clear sky day
+                "01n" -> R.id.animationMoon              //clear sky night
+                "02d" -> R.id.animationCloudy           //few clouds day
+                "02n" -> R.id.animationCloudyNight           //few clouds night
+                "03d", "03n" -> R.id.animationClouds    //scattered clouds
+                "04d", "04n" -> R.id.animationClouds    //broken clouds
+                "09d", "09n" -> R.id.animationRain      //shower rain
+                "10d" -> R.id.animationRain             //rain day
+                "10n" -> R.id.animationRain             //rain night
+                "11d", "11n" -> R.id.animationLightning  //thunderstorm
+                "13d", "13n" -> R.id.animationCloudy    //snow
+                "50d", "50n" -> R.id.animationClouds    //mist
+                else -> -1
             }
-            return viewId
         }
 
         fun hideAllAnimations(notificationLayout: RemoteViews) {
@@ -145,7 +143,6 @@ class Do {
             SP.putFloat(LocationHelper.KEY_LAST_KNOWN_LATITUDE, latitude.toFloat())
             SP.putFloat(LocationHelper.KEY_LAST_KNOWN_LONGITUDE, longitude.toFloat())
         }
-
 
 
         fun getDegreesSymbol(): String {

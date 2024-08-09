@@ -56,11 +56,9 @@ class BootReceiver : BroadcastReceiver() {
                     mFusedLocationClient.requestLocationUpdates(LocationHelper.createLocationRequest(), Do.getPendingIntent(context))
 
                     //  Get Weather and update notification:
-                    WeatherManager(context).getCurrentWeather(object : WeatherManager.OnWeatherLoad {
-                        override fun onWeather(weather: OpenWeather) {
-                            WeatherNotification(context).updateWeather(weather)
-                        }
-                    })
+                    WeatherManager(context).getCurrentWeather { weather ->
+                        WeatherNotification(context).updateWeather(weather)
+                    }
                 }
 
 //                //  Register to notification updates by AlarmManager:

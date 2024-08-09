@@ -119,11 +119,9 @@ class MainActivity : AppCompatActivity() {
                     //  save last location to sharedPreferences:
                     Do.saveLocationToSharedPreferences(it.latitude, it.longitude)
                 }
-                WeatherManager(this).getCurrentWeather(object : WeatherManager.OnWeatherLoad {
-                    override fun onWeather(weather: OpenWeather) {
-                        notificationManager.updateWeather(weather)
-                    }
-                })
+                WeatherManager(this).getCurrentWeather { weather ->
+                    notificationManager.updateWeather(weather)
+                }
             }
         }
     }
@@ -167,11 +165,13 @@ class MainActivity : AppCompatActivity() {
                     else binding.registerToggle.isChecked = true
 
                 } else {
-                    AlertDialog.Builder(this).setTitle("Permissions").setMessage("Hi there.\nWe need those permission in order to get weather updates, and to keep errors log.\n" +
-                            "You won't be able to use this app unless you approve all of the permission.")
-                            .setPositiveButton("go to permissions") { _, _ -> askForPermissions() }
-                            .setOnDismissListener { binding.registerToggle.isChecked = false }
-                            .show()
+                    AlertDialog.Builder(this).setTitle("Permissions").setMessage(
+                        "Hi there.\nWe need those permission in order to get weather updates, and to keep errors log.\n" +
+                                "You won't be able to use this app unless you approve all of the permission."
+                    )
+                        .setPositiveButton("go to permissions") { _, _ -> askForPermissions() }
+                        .setOnDismissListener { binding.registerToggle.isChecked = false }
+                        .show()
                 }
                 return
             }
@@ -189,10 +189,13 @@ class MainActivity : AppCompatActivity() {
                 requestLastLocationAndSetNotification()
             } else {
 
-                Snackbar.make(findViewById(R.id.rootLayout), getString(R.string.turn_on_location_message), Snackbar.LENGTH_INDEFINITE).apply {
-                    setAction("TURN ON", View.OnClickListener { startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) })
-                    show()
-                }
+                Snackbar.make(findViewById(R.id.rootLayout), getString(R.string.turn_on_location_message), Snackbar.LENGTH_INDEFINITE)
+                    .apply {
+                        setAction(
+                            "TURN ON",
+                            View.OnClickListener { startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)) })
+                        show()
+                    }
 
                 binding.registerToggle.isChecked = false
             }
